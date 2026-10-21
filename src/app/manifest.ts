@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {
-		name: "Mailflare",
-		short_name: "Mailflare",
+		name: "Kwings Mail",
+		short_name: "Kwings Mail",
 		description: "Email, anywhere.",
 		start_url: "/inbox",
 		display: "standalone",

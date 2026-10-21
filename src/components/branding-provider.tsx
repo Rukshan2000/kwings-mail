@@ -15,7 +15,7 @@ export function BrandingProvider({ children, initialBranding }: { children: Reac
 		const nextBranding = await fetchBranding();
 		setBranding(nextBranding);
 		setIconVersion(Date.now());
-		if (document.title === "Mailflare" || document.title === branding.appName) {
+		if (document.title === "Kwings Mail" || document.title === branding.appName) {
 			document.title = nextBranding.appName;
 		}
 	}
