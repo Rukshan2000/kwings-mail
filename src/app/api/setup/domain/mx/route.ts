@@ -3,6 +3,7 @@ import { hasAdminAccount } from "@/lib/auth/setup";
 import { getEnv } from "@/lib/cloudflare";
 import { preflightDomain } from "@/lib/domains/preflight";
 import { hasConflictingMxRecords } from "@/lib/domains/mx-records";
+import { isManualZone } from "@/lib/domains/provision";
 import { setupDomainSchema } from "@/lib/validators";
 import { readJsonBody } from "@/lib/http/request";
 import { RequestBodyTooLargeError } from "@/lib/http/errors";
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
 
 	try {
 		const domain = await preflightDomain(env, parsed.data.hostname);
+		if (isManualZone(domain.zone.id)) return NextResponse.json({ hasExistingMx: false });
 		const hasExistingMx = await hasConflictingMxRecords(
 			env,
 			domain.zone.id,
