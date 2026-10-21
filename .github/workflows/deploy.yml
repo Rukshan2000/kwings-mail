@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/rukshan2000/kwings-mail
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # The server key only runs /opt/kwings-mail/deploy.sh (forced command); it gets the
+      # commit SHA as its command and this job's GHCR token on stdin to pull the image.
+      - name: Deploy to server
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          echo "164.68.97.187 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFg2V8qaAnDYIUUTFfQos9ufJXfhuydCJnQ17NHAcmki" > ~/.ssh/known_hosts
+          install -m 600 /dev/null ~/.ssh/deploy_key
+          echo "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          echo "$GHCR_TOKEN" | ssh -i ~/.ssh/deploy_key gh-runner@164.68.97.187 "$GITHUB_SHA"

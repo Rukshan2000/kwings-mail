@@ -1,0 +1,17 @@
+# Production on the VPS (/opt/kwings-mail). Driven by deploy.sh; settings come from .env next to this file.
+# Web is published on 127.0.0.1 only (host Nginx serves mail.kwingsmedia.com); SMTP 25 is public for inbound mail.
+name: kwings-mail
+
+services:
+  mailflare:
+    image: ghcr.io/rukshan2000/kwings-mail:${IMAGE_TAG:?set IMAGE_TAG}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3030:3000"
+      - "25:25"
+    env_file: .env
+    volumes:
+      - data:/data
+
+volumes:
+  data:
