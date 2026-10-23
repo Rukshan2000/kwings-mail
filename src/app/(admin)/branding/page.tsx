@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { ArrowRight, ExternalLink, ImagePlus, LockKeyhole, Palette } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 import { useBranding } from "@/components/branding-provider";
@@ -37,11 +36,6 @@ export default function BrandingPage() {
 						<CardTitle className="flex items-center gap-2"><LockKeyhole className="h-5 w-5" />{t("branding.licenseRequired")}</CardTitle>
 						<CardDescription>{t("branding.originalNote")}</CardDescription>
 					</CardHeader>
-					<CardContent className="flex flex-col gap-3 pt-6 sm:flex-row">
-						<Button asChild>
-							<Link href="/licenses">{t("license.view")}</Link>
-						</Button>
-					</CardContent>
 				</Card>
 			</div>
 		);

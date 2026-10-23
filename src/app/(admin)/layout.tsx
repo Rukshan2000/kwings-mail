@@ -26,7 +26,6 @@ const primaryOnlyPrefixes = [
   "/webhooks",
   "/backups",
   "/branding",
-  "/licenses",
   "/activity",
   "/audit-logs",
   "/general",
