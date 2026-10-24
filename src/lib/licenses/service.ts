@@ -46,17 +46,17 @@ export async function getLicenseStatus(env: CloudflareEnv): Promise<LicenseStatu
 export async function getLicenseEntitlements(env: CloudflareEnv): Promise<LicenseEntitlements> {
 	try {
 		const status = await getLicenseStatus(env);
-		// Kwings: unlimited staff accounts, shared mailboxes and forwarding without a license.
+		// Kwings: branding, unlimited staff accounts, shared mailboxes and forwarding without a license.
 		return {
 			plan: status.plan,
-			canCustomizeBranding: status.active,
+			canCustomizeBranding: true,
 			canManageAccounts: true,
 			canShareMailboxes: true,
 			accountSeatLimit: null,
 			canForwardEmail: true,
 		};
 	} catch {
-		return { plan: "community", canCustomizeBranding: false, canManageAccounts: true, canShareMailboxes: true, accountSeatLimit: null, canForwardEmail: true };
+		return { plan: "community", canCustomizeBranding: true, canManageAccounts: true, canShareMailboxes: true, accountSeatLimit: null, canForwardEmail: true };
 	}
 }
 
