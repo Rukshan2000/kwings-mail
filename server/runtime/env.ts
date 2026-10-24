@@ -32,7 +32,8 @@ export function createNodeRuntime(): NodeRuntime {
 	const dataDir = resolve(optional("DATA_DIR") ?? "./data");
 	mkdirSync(join(dataDir, "blobs"), { recursive: true });
 
-	const database = openSqliteDatabase(join(dataDir, "kwings-mail.sqlite"));
+	// On-disk name predates the rebrand; renaming it orphans existing installs' data.
+	const database = openSqliteDatabase(join(dataDir, "mailflare.sqlite"));
 	const bucket = openFileBucket(join(dataDir, "blobs"));
 	const mailer = openMailer(mailerConfig());
 	const inboundQueue = openQueue("kwings-mail-inbound");
