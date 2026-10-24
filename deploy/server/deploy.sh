@@ -17,7 +17,7 @@ fi
 export IMAGE_TAG="$tag"
 # ponytail: no automatic rollback; run ./deploy.sh <previous-sha> from .deploy-history if a release is bad.
 docker compose -f docker-compose.prod.yml pull
-docker compose -f docker-compose.prod.yml up -d --wait --wait-timeout 120
+docker compose -f docker-compose.prod.yml up -d --remove-orphans --wait --wait-timeout 120
 echo "$tag" >>.deploy-history
 docker image prune -f >/dev/null
 echo "Deployed $tag"
