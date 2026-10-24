@@ -49,7 +49,7 @@ Edit **both** copies so the next CI deploy does not lose it:
 name: kwings-mail
 
 services:
-  mailflare:
+  kwings-mail:
     image: ghcr.io/rukshan2000/kwings-mail:${IMAGE_TAG:?set IMAGE_TAG}
     restart: unless-stopped
     ports:
@@ -85,7 +85,7 @@ volumes:
   spool:
 ```
 
-Copy the repo version to the server (from the `mailflare` folder on your Mac):
+Copy the repo version to the server (from the `kwings-mail` folder on your Mac):
 
 ```bash
 scp deploy/server/docker-compose.prod.yml root@164.68.97.187:/opt/kwings-mail/

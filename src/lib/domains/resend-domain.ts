@@ -122,7 +122,7 @@ async function publishRecords(env: CloudflareEnv, domain: DomainRow, records: Re
 
 /**
  * Registers the domain with Resend if needed, writes its DNS records to the
- * Cloudflare zone (when Mailflare manages it) and asks Resend to verify.
+ * Cloudflare zone (when Kwings Mail manages it) and asks Resend to verify.
  */
 export async function setupResendDomain(env: CloudflareEnv, domain: DomainRow): Promise<ResendDomainView> {
 	const apiKey = await requireResendKey(env, domain);

@@ -37,7 +37,7 @@ export async function snoozeMessage(messageId: string, snoozedUntil: string) {
 		body: JSON.stringify({ snoozedUntil: parsed.toISOString() }),
 	});
 	if (!response.ok) throw new Error("Unable to snooze message");
-	window.dispatchEvent(new Event("mailflare:messages-changed"));
+	window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 }
 
 export function isMessageSnoozed(snoozedUntil?: string | null): boolean {
@@ -47,17 +47,17 @@ export function isMessageSnoozed(snoozedUntil?: string | null): boolean {
 export async function unsnoozeMessage(messageId: string) {
 	const response = await authFetch(`/api/messages/${messageId}/snooze`, { method: "DELETE" });
 	if (!response.ok) throw new Error("Unable to unsnooze message");
-	window.dispatchEvent(new Event("mailflare:messages-changed"));
+	window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 }
 
 export async function toggleMessageStar(messageId: string) {
 	const response = await authFetch(`/api/messages/${messageId}/star`, { method: "POST" });
 	if (!response.ok) throw new Error("Unable to update message star");
 	const result = (await response.json()) as { starred: boolean };
-	window.dispatchEvent(new Event("mailflare:message-counts-changed"));
+	window.dispatchEvent(new Event("kwings-mail:message-counts-changed"));
 	return result;
 }
 
 export function dispatchMessageCountsDelta(detail: MessageCountsDelta) {
-	window.dispatchEvent(new CustomEvent<MessageCountsDelta>("mailflare:message-counts-delta", { detail }));
+	window.dispatchEvent(new CustomEvent<MessageCountsDelta>("kwings-mail:message-counts-delta", { detail }));
 }

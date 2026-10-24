@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "mailflare",
+	"name": "kwings-mail",
 	"main": "./worker.ts",
 	"compatibility_date": "2026-05-20",
 	"compatibility_flags": [
@@ -17,7 +17,7 @@
 	"services": [
 		{
 			"binding": "WORKER_SELF_REFERENCE",
-			"service": "mailflare",
+			"service": "kwings-mail",
 		},
 	],
 	"triggers": {
@@ -52,44 +52,44 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "mailflare",
+			"database_name": "kwings-mail",
 			"migrations_dir": "drizzle/migrations",
 		},
 	],
 	"r2_buckets": [
 		{
 			"binding": "BUCKET",
-			"bucket_name": "mailflare-raw",
+			"bucket_name": "kwings-mail-raw",
 		},
 	],
 	"queues": {
 		"producers": [
 			{
 				"binding": "INBOUND_QUEUE",
-				"queue": "mailflare-inbound",
+				"queue": "kwings-mail-inbound",
 			},
 			{
 				"binding": "OUTBOUND_QUEUE",
-				"queue": "mailflare-outbound",
+				"queue": "kwings-mail-outbound",
 			},
 			{
 				"binding": "AGENT_QUEUE",
-				"queue": "mailflare-agent",
+				"queue": "kwings-mail-agent",
 			},
 		],
 		"consumers": [
 			{
-				"queue": "mailflare-inbound",
+				"queue": "kwings-mail-inbound",
 				"max_batch_size": 5,
 				"max_retries": 3,
 			},
 			{
-				"queue": "mailflare-outbound",
+				"queue": "kwings-mail-outbound",
 				"max_batch_size": 5,
 				"max_retries": 3,
 			},
 			{
-				"queue": "mailflare-agent",
+				"queue": "kwings-mail-agent",
 				"max_batch_size": 1,
 				"max_retries": 3,
 			},

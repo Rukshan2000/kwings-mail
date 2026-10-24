@@ -1,5 +1,5 @@
 /**
- * Push through a Mailflare push relay (the `mailflare-relay` Worker) instead of
+ * Push through a Kwings Mail push relay (the `kwings-mail-relay` Worker) instead of
  * holding an APNs key. The app trades its APNs token for an opaque handle at
  * the relay and registers the handle here in place of the token; sending is
  * then one POST to the relay, which signs and forwards it to Apple.

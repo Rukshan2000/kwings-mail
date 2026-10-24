@@ -9,7 +9,7 @@ import { build } from "esbuild";
 import Database from "better-sqlite3";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const outDir = mkdtempSync(join(tmpdir(), "mailflare-recipient-display-"));
+const outDir = mkdtempSync(join(tmpdir(), "kwings-mail-recipient-display-"));
 after(() => rmSync(outDir, { recursive: true, force: true }));
 
 async function bundle(entry, outfile) {

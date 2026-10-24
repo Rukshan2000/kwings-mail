@@ -76,7 +76,7 @@ export function ContactDetailsTrigger({
 			setContact(updated);
 			if (!label) setRenamed({ from: visibleLabel, value: nextName });
 			setOpen(false);
-			window.dispatchEvent(new CustomEvent("mailflare:contact-changed", {
+			window.dispatchEvent(new CustomEvent("kwings-mail:contact-changed", {
 				detail: { email: updated.email, displayName: nextName },
 			}));
 		} catch (saveError) {

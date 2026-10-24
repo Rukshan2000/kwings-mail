@@ -1,7 +1,7 @@
 import type { DomainDnsView } from "@/lib/domains/service";
 
 /**
- * The DNS a self-hosted install needs when Mailflare is not managing the
+ * The DNS a self-hosted install needs when Kwings Mail is not managing the
  * zone. Rendered as "missing" until the operator confirms, since the app
  * cannot read their DNS; the records are what the SMTP listener and an
  * SMTP relay expect.

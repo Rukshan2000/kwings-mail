@@ -28,8 +28,8 @@ function installInvalidationListeners(): void {
 	if (listenersInstalled || typeof window === "undefined") return;
 	listenersInstalled = true;
 	window.addEventListener(AUTH_SESSION_CHANGED_EVENT, invalidateSession);
-	window.addEventListener("mailflare:messages-changed", invalidate);
-	window.addEventListener("mailflare:folders-changed", invalidate);
+	window.addEventListener("kwings-mail:messages-changed", invalidate);
+	window.addEventListener("kwings-mail:folders-changed", invalidate);
 }
 
 export function invalidateFolderCache(): void {

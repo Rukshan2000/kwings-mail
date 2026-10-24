@@ -6,7 +6,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const bundleDirectory = mkdtempSync(join(root, "node_modules", "mailflare-unread-bundle-"));
+const bundleDirectory = mkdtempSync(join(root, "node_modules", "kwings-mail-unread-bundle-"));
 await build({
 	stdin: {
 		contents: `
@@ -69,7 +69,7 @@ test("a skipped permanent delete is reported after the list is told to refresh",
 			throwIfDeleteSkipped(Response.json({ ok: true, deleted: 1, skipped: 2 }), "delete"),
 			(error) => error instanceof PartialDeleteError && error.skipped === 2,
 		);
-		assert.deepEqual(events, ["mailflare:messages-changed"]);
+		assert.deepEqual(events, ["kwings-mail:messages-changed"]);
 	} finally {
 		delete globalThis.window;
 	}

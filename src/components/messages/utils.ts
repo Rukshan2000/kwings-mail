@@ -105,7 +105,7 @@ export async function runBulkMessageAction(messageIds: string[], action: string,
 	if (!response.ok) throw new Error(defaultTranslator("error.updateSelected"));
 	await throwIfDeleteSkipped(response, action);
 	if (action === "read" || action === "unread") markMessagesReadInCaches(messageIds, action === "read");
-	if (notify) window.dispatchEvent(new Event("mailflare:messages-changed"));
+	if (notify) window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 }
 
 /**
@@ -125,6 +125,6 @@ export async function emptyMessageFolder(mailboxId: string, folder: PermanentDel
 		deletedTotal += data.deleted ?? 0;
 		if (!data.remaining || !data.deleted) break;
 	}
-	window.dispatchEvent(new Event("mailflare:messages-changed"));
+	window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 	return deletedTotal;
 }

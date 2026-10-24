@@ -3,14 +3,14 @@
  *
  * Previews are encrypted per device so Apple never sees sender or subject:
  * an ephemeral P-256 key agrees with the device's registered public key
- * (ECDH), HKDF-SHA256 (random salt, info "mailflare-push-v1") derives an
+ * (ECDH), HKDF-SHA256 (random salt, info "kwings-mail-push-v1") derives an
  * AES-256-GCM key, and the payload carries the ephemeral public key, salt, IV
  * and ciphertext. The app's Notification Service Extension reverses it with
  * the private key it keeps in the Secure Enclave (CryptoKit:
  * `sharedSecret.hkdfDerivedSymmetricKey(using: SHA256, salt:, sharedInfo:, outputByteCount: 32)`).
  */
 
-export const PUSH_HKDF_INFO = "mailflare-push-v1";
+export const PUSH_HKDF_INFO = "kwings-mail-push-v1";
 
 export type EncryptedPreview = {
 	/** Ephemeral public key, raw uncompressed point, base64. */

@@ -1,11 +1,11 @@
 import type { ColumnWidthPreference } from "./column-width-preferences-types";
 
 function storageKey(userId: string, column: ColumnWidthPreference) {
-	return `mailflare-column-width:${column}:${userId}`;
+	return `kwings-mail-column-width:${column}:${userId}`;
 }
 
 function immediateStorageKey(column: ColumnWidthPreference) {
-	return `mailflare-column-width:${column}`;
+	return `kwings-mail-column-width:${column}`;
 }
 
 export function readInitialColumnWidth(column: ColumnWidthPreference, fallback: number, min: number, max: number) {

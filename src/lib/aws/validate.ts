@@ -19,7 +19,7 @@ export class AwsCredentialsError extends Error {}
 
 /**
  * Checks the credentials really belong to an account, then probes each service
- * Mailflare needs with a harmless read, so missing permissions are reported up
+ * Kwings Mail needs with a harmless read, so missing permissions are reported up
  * front instead of halfway through a setup.
  */
 export async function validateAwsConfig(config: AwsConfig): Promise<AwsCapabilityReport> {
@@ -53,7 +53,7 @@ export async function validateAwsConfig(config: AwsConfig): Promise<AwsCapabilit
 	return { ...identity, region: config.region, sending, productionAccess, receivingRegion, receiving, sns, s3, missing };
 }
 
-/** The IAM policy that grants everything Mailflare does, for the admin to attach. */
+/** The IAM policy that grants everything Kwings Mail does, for the admin to attach. */
 export const AWS_IAM_POLICY = {
 	Version: "2012-10-17",
 	Statement: [

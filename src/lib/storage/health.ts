@@ -6,7 +6,7 @@ export type StorageTestResult = { ok: boolean; error?: string; latencyMs: number
 export async function testStorage(env: CloudflareEnv): Promise<StorageTestResult> {
 	const started = Date.now();
 	const key = `healthcheck/${newId("chk")}`;
-	const payload = `mailflare ${new Date().toISOString()}`;
+	const payload = `kwings-mail ${new Date().toISOString()}`;
 	try {
 		await env.BUCKET.put(key, payload, { httpMetadata: { contentType: "text/plain" } });
 		const object = await env.BUCKET.get(key);

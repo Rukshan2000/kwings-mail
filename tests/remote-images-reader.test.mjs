@@ -48,14 +48,14 @@ test("shared CSS variables keep their original text value for non-image uses", (
 	assert.ok(result.html.includes(endpoint("https://cdn.example/shared.png")));
 	assert.match(result.html, /--shared:"https:\/\/cdn\.example\/shared\.png"/);
 	assert.match(result.html, /content:var\(--shared\)/);
-	assert.match(result.html, /image-set\(var\(--mailflare-image-/);
+	assert.match(result.html, /image-set\(var\(--kwings-mail-image-/);
 });
 
 test("image-valued properties proxy strings through nested custom properties", () => {
 	const html = '<style>:root{--src:"https://cdn.example/chain.png";--img:image-set(var(--src) 1x);--text:"https://cdn.example/text.png"}.hero{background-image:var(--img);content:var(--text)}</style><div class="hero">Mail</div>';
 	const result = prepareReaderEmailHtml(html, { reader: true, allowRemote: true });
 	assert.ok(result.html.includes(endpoint("https://cdn.example/chain.png")));
-	assert.match(result.html, /background-image:var\(--mailflare-image-/);
+	assert.match(result.html, /background-image:var\(--kwings-mail-image-/);
 	assert.match(result.html, /--img:image-set\(var\(--src\) 1x\)/);
 	assert.match(result.html, /content:var\(--text\)/);
 	assert.ok(!result.html.includes(endpoint("https://cdn.example/text.png")));
@@ -72,7 +72,7 @@ test("CSS custom-property image strings and fallbacks use the authenticated prox
 	}
 	assert.match(result.html, /https:\/\/cdn\.example\/text\.png/);
 	assert.ok(!result.html.includes(endpoint("https://cdn.example/text.png")));
-	assert.match(result.html, /image-set\(var\(--mailflare-image-/);
+	assert.match(result.html, /image-set\(var\(--kwings-mail-image-/);
 	assert.doesNotMatch(result.html, /image-set\(var\(--chain\)/);
 });
 

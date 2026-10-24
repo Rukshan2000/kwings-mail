@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { registerMailflareServiceWorker } from "@/lib/push/client";
+import { registerKwingsMailServiceWorker } from "@/lib/push/client";
 
 export function PwaServiceWorker() {
 	useEffect(() => {
 		if (!("serviceWorker" in navigator)) return;
-		void registerMailflareServiceWorker().catch((error) => {
-			console.warn("Mailflare service worker registration failed", error);
+		void registerKwingsMailServiceWorker().catch((error) => {
+			console.warn("Kwings Mail service worker registration failed", error);
 		});
 	}, []);
 

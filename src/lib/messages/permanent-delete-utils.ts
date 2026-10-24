@@ -37,6 +37,6 @@ export async function throwIfDeleteSkipped(response: Response, action: string): 
 	if (action !== "delete") return;
 	const result = (await response.json().catch(() => null)) as { skipped?: number } | null;
 	if (!result?.skipped) return;
-	window.dispatchEvent(new Event("mailflare:messages-changed"));
+	window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 	throw new PartialDeleteError(result.skipped);
 }

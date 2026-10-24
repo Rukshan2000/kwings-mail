@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const outDir = mkdtempSync(join(tmpdir(), "mailflare-imap-batch-test-"));
+const outDir = mkdtempSync(join(tmpdir(), "kwings-mail-imap-batch-test-"));
 after(() => rmSync(outDir, { recursive: true, force: true }));
 
 await build({

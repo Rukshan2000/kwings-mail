@@ -7,7 +7,7 @@ import { zodSchema } from "ai";
 import { build } from "esbuild";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const bundleDirectory = mkdtempSync(join(root, "node_modules", "mailflare-schema-bundle-"));
+const bundleDirectory = mkdtempSync(join(root, "node_modules", "kwings-mail-schema-bundle-"));
 await build({
 	stdin: {
 		contents: `

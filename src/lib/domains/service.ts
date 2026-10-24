@@ -160,7 +160,7 @@ export async function getDomainDns(
 ): Promise<DomainDnsView> {
 	if (isManualZone(domain.zoneId)) return getManualDomainDns(env, domain.hostname);
 	// Read the zone's actual sending state rather than trusting `sendingRequested`,
-	// which goes stale when sending is enabled outside Mailflare (or when the row
+	// which goes stale when sending is enabled outside Kwings Mail (or when the row
 	// was written before the subdomain existed). A missing Email Sending permission
 	// must not take down the routing/DNS view, so a failed list degrades to none.
 	const [routingDns, routingSettings, sendingSubdomains] = await Promise.all([

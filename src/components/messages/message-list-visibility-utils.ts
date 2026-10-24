@@ -1,4 +1,4 @@
-const STORAGE_KEY = "mailflare-message-list-visible";
+const STORAGE_KEY = "kwings-mail-message-list-visible";
 
 export function readInitialMessageListVisible() {
 	if (typeof window === "undefined") return true;

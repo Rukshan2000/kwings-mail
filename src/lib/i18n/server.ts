@@ -12,7 +12,7 @@ export async function getRequestLocale() {
 export async function loadServerMessages(locale: Locale): Promise<Partial<Messages> | undefined> {
 	try {
 		const assets = getEnv().ASSETS;
-		return await loadMessages(locale, (path) => assets.fetch(new URL(path, "https://mailflare.local")));
+		return await loadMessages(locale, (path) => assets.fetch(new URL(path, "https://kwings-mail.local")));
 	} catch (error) {
 		console.warn(`Falling back to English: ${error instanceof Error ? error.message : error}`);
 		return undefined;

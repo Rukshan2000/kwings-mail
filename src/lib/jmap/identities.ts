@@ -52,7 +52,7 @@ export const identitySet: JmapMethodHandler = async (ctx, args) => ({
 });
 
 /**
- * EmailSubmission/set: send a draft. Mailflare's send writes a fresh Sent row,
+ * EmailSubmission/set: send a draft. Kwings Mail's send writes a fresh Sent row,
  * so the draft is removed afterwards and the submission id is the sent
  * message's id; onSuccessDestroyEmail / onSuccessUpdateEmail are honoured
  * by reporting the draft as destroyed.

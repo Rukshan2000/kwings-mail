@@ -10,7 +10,7 @@ export function MarkAsRead({ messageId }: { messageId: string }) {
 			.then((response) => {
 				if (!response.ok) return;
 				markMessagesReadInCaches([messageId], true);
-				window.dispatchEvent(new Event("mailflare:messages-changed"));
+				window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 			})
 			.catch(() => {
 				// silently fail

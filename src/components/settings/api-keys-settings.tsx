@@ -41,8 +41,8 @@ export function ApiKeysSettings() {
 		let cancelled = false;
 		const refresh = () => void loadManagedApiKeys().then((items) => { if (!cancelled) { setKeys(items); setError(null); } }).catch((cause) => { if (!cancelled) setError(cause instanceof Error ? cause.message : t("apiKeys.loadFailed")); }).finally(() => { if (!cancelled) setLoading(false); });
 		refresh();
-		window.addEventListener("mailflare:api-keys-changed", refresh);
-		return () => { cancelled = true; window.removeEventListener("mailflare:api-keys-changed", refresh); };
+		window.addEventListener("kwings-mail:api-keys-changed", refresh);
+		return () => { cancelled = true; window.removeEventListener("kwings-mail:api-keys-changed", refresh); };
 	}, [t]);
 
 	async function create(event: React.FormEvent) {

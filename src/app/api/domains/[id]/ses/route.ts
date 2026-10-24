@@ -39,7 +39,7 @@ export async function POST(request: Request, { params }: Params) {
 	const body = (await request.json().catch(() => ({}))) as { action?: string };
 	try {
 		if (body.action === "test") {
-			const sent = await sendSystemEmail(env, { to: user.email, subject: "Mailflare test email", text: `This message confirms ${domain.hostname} can send mail through Amazon SES.`, hostname: domain.hostname });
+			const sent = await sendSystemEmail(env, { to: user.email, subject: "Kwings Mail test email", text: `This message confirms ${domain.hostname} can send mail through Amazon SES.`, hostname: domain.hostname });
 			if (!sent) return NextResponse.json({ error: `Create a mailbox on ${domain.hostname} to send the test from.` }, { status: 400 });
 			return NextResponse.json({ ok: true, to: user.email });
 		}

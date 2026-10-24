@@ -22,9 +22,9 @@ function output(value: unknown, isError = false) {
 	return { content: [{ type: "text" as const, text: JSON.stringify(value) }], isError };
 }
 
-export function createMailflareMcpHandler(env: CloudflareEnv, principal: McpPrincipal, baseUrl: string, authorization: string) {
+export function createKwingsMailMcpHandler(env: CloudflareEnv, principal: McpPrincipal, baseUrl: string, authorization: string) {
 	return createMcpHandler(() => {
-		const server = new McpServer({ name: "mailflare", version: "0.1.0" });
+		const server = new McpServer({ name: "kwings-mail", version: "0.1.0" });
 		if (principal.scopes.some((scope) => scope.startsWith("mcp:"))) {
 		for (const name of CALENDAR_TOOL_NAMES) {
 			server.registerTool(name, { description: calendarToolDescriptions[name], inputSchema: calendarToolSchemas[name] }, async (args) => {

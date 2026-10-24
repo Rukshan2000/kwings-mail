@@ -1,17 +1,17 @@
 "use client";
 
-export const USER_TIME_ZONE_CHANGED_EVENT = "mailflare:user-time-zone-changed";
+export const USER_TIME_ZONE_CHANGED_EVENT = "kwings-mail:user-time-zone-changed";
 
 export function saveUserTimeZonePreference(userId: string, timeZone: string | null): void {
 	const next = JSON.stringify({ userId, timeZone });
 	try {
-		if (localStorage.getItem("mailflare-user-time-zone") === next) return;
-		localStorage.setItem("mailflare-user-time-zone", next);
+		if (localStorage.getItem("kwings-mail-user-time-zone") === next) return;
+		localStorage.setItem("kwings-mail-user-time-zone", next);
 	} catch { /* Saving on the server remains authoritative. */ }
 	window.dispatchEvent(new Event(USER_TIME_ZONE_CHANGED_EVENT));
 }
 
 export function clearUserTimeZonePreference(): void {
-	try { localStorage.removeItem("mailflare-user-time-zone"); }
+	try { localStorage.removeItem("kwings-mail-user-time-zone"); }
 	catch { /* Storage is optional. */ }
 }

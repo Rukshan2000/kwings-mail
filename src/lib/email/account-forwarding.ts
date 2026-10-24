@@ -5,7 +5,7 @@ import { getEmailAddress } from "@/lib/email/address";
 import { resolveInboundAddress } from "@/lib/email/routing";
 import { getLicenseEntitlements } from "@/lib/licenses/service";
 
-export const MAILFLARE_FORWARDED_HEADER = "X-Mailflare-Forwarded";
+export const KWINGS_MAIL_FORWARDED_HEADER = "X-Kwings-Mail-Forwarded";
 
 export async function getAccountForwardingDestination(
 	env: CloudflareEnv,

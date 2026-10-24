@@ -13,7 +13,7 @@ export function idSetToList(value: unknown): string[] {
 	return Object.entries(value as Record<string, unknown>).filter(([, on]) => !!on).map(([id]) => id);
 }
 
-/** The keywords Mailflare stores as columns. `$draft` is implied by the Drafts-only rule, and unknown keywords are ignored. */
+/** The keywords Kwings Mail stores as columns. `$draft` is implied by the Drafts-only rule, and unknown keywords are ignored. */
 export function importFlags(keywords: unknown): { read: boolean; starred: boolean } {
 	const set = new Set(idSetToList(keywords));
 	return { read: set.has(KEYWORD_SEEN), starred: set.has(KEYWORD_FLAGGED) };

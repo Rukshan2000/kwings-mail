@@ -1,15 +1,15 @@
-# Mailflare email relay
+# Kwings Mail email relay
 
-A small Cloudflare Worker for self-hosted Mailflare installs that want to keep
+A small Cloudflare Worker for self-hosted Kwings Mail installs that want to keep
 receiving mail through Cloudflare Email Routing (no port 25, no MX changes).
 
-1. `npm install`, then `npx wrangler secret put MAILFLARE_URL` (your server's
+1. `npm install`, then `npx wrangler secret put KWINGS_MAIL_URL` (your server's
    public URL, e.g. `https://mail.example.com`) and
    `npx wrangler secret put INBOUND_WEBHOOK_SECRET` (the same value as in the
    server's `.env.docker`).
 2. `npm run deploy`.
 3. In the Cloudflare dashboard, under Email Routing for your zone, route the
-   catch-all, or the addresses you want, to the `mailflare-email-relay` Worker.
+   catch-all, or the addresses you want, to the `kwings-mail-email-relay` Worker.
 
 Each message is posted to `/api/inbound` on your server with an HMAC
 signature. The server stores it and replies with the routing decision, so

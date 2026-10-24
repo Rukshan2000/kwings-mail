@@ -26,7 +26,7 @@ test("unauthenticated and self-hosted requests never make outbound proxy request
 	globalThis.proxyAuth = { error: Response.json({ error: "Unauthorized" }, { status: 401 }) };
 	assert.equal((await GET(request())).status, 401);
 	globalThis.proxyAuth = { user: { id: "user" }, error: null };
-	globalThis.proxyEnv = { MAILFLARE_RUNTIME: "node" };
+	globalThis.proxyEnv = { KWINGS_MAIL_RUNTIME: "node" };
 	assert.equal((await GET(request())).status, 503);
 });
 

@@ -17,7 +17,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
  * description never echoes SQL internals to the client. Everything runs
  * against an in-memory SQLite database; no Workers binding is touched.
  */
-const outDir = mkdtempSync(join(root, "node_modules", "mailflare-jmap-batch-test-"));
+const outDir = mkdtempSync(join(root, "node_modules", "kwings-mail-jmap-batch-test-"));
 after(() => rmSync(outDir, { recursive: true, force: true }));
 
 await build({

@@ -33,10 +33,10 @@ export function useMessageThread(messageId: string, threadId: string | null | un
 				void load();
 			}, 150);
 		}
-		window.addEventListener("mailflare:messages-changed", scheduleLoad);
+		window.addEventListener("kwings-mail:messages-changed", scheduleLoad);
 		return () => {
 			cancelled = true;
-			window.removeEventListener("mailflare:messages-changed", scheduleLoad);
+			window.removeEventListener("kwings-mail:messages-changed", scheduleLoad);
 			if (refreshTimer) window.clearTimeout(refreshTimer);
 		};
 	}, [messageId, threadId]);

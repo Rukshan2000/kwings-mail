@@ -1,6 +1,6 @@
 import type { ProfileAvatarChangedDetail } from "./types";
 
-export const PROFILE_AVATAR_CHANGED_EVENT = "mailflare:profile-avatar-changed";
+export const PROFILE_AVATAR_CHANGED_EVENT = "kwings-mail:profile-avatar-changed";
 
 export function getProfileAvatarUrl(): string {
 	return `/api/profile/avatar?v=${Date.now()}`;

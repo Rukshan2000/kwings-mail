@@ -72,7 +72,7 @@ const sections: { id?: string; labelKey?: TranslationKey; links: AdminNavLink[] 
 ];
 
 function AdminSection({ id, label, links, showDivider, minimal }: { id?: string; label?: string; links: NavLink[]; showDivider: boolean; minimal: boolean }) {
-  const [open, toggle] = useSectionOpen(`mailflare:nav:admin-section-open:${id ?? ""}`);
+  const [open, toggle] = useSectionOpen(`kwings-mail:nav:admin-section-open:${id ?? ""}`);
   // Unlabelled sections have nothing to toggle; the icon rail always shows everything.
   const expanded = minimal || !label || open;
   return (

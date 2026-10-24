@@ -128,7 +128,7 @@ export default function PublicBookingEventPage() {
 						<div className="mb-4 max-w-48"><LanguageSelector /></div>
 						<div className="flex min-w-0 items-center gap-3 max-sm:order-first max-sm:mb-5">
 
-							<img src={branding.iconUrl} width={24} height={24} alt={branding.appName || "Mailflare"} />
+							<img src={branding.iconUrl} width={24} height={24} alt={branding.appName || "Kwings Mail"} />
 
 							<span className="truncate font-semibold">{branding.appName}</span>
 						</div>

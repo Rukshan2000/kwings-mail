@@ -127,7 +127,7 @@ export default function SettingsImportPage() {
           }),
       );
       setFileResult(result);
-      window.dispatchEvent(new Event("mailflare:messages-changed"));
+      window.dispatchEvent(new Event("kwings-mail:messages-changed"));
     } catch (error) {
       setFileError(
         error instanceof Error ? error.message : t("importPage.fileFailed"),
@@ -212,7 +212,7 @@ export default function SettingsImportPage() {
       }
       setImapResult(total);
       setImapForm((current) => ({ ...current, password: "" }));
-      window.dispatchEvent(new Event("mailflare:messages-changed"));
+      window.dispatchEvent(new Event("kwings-mail:messages-changed"));
     } catch (error) {
       setImapError(
         error instanceof Error ? error.message : t("importPage.imapFailed"),
@@ -293,7 +293,7 @@ export default function SettingsImportPage() {
               </div>
               {/* <p className="text-xs leading-5 text-neutral-500">
             Select Folders to import every source IMAP folder into matching
-            Mailflare folders.
+            Kwings Mail folders.
           </p> */}
             </div>
 

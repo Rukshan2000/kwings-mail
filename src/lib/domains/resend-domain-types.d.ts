@@ -10,7 +10,7 @@ export type ResendDomainView = {
 		priority: number | null;
 		status: string;
 	}[];
-	/** Mailflare can write the records to the Cloudflare zone itself. */
+	/** Kwings Mail can write the records to the Cloudflare zone itself. */
 	dnsManaged: boolean;
 	/** Records Resend asked for that are not in the Cloudflare zone; null when DNS is manual or unchecked. */
 	missingDns: number | null;

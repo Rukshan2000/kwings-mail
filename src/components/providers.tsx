@@ -41,7 +41,7 @@ export function Providers({ children, initialBranding }: { children: React.React
 			clearCurrentUserCache();
 			// The dashboard layout outlives an account switch, so its all-mailbox counts (the app badge) would keep the old account's number.
 			if ((event as CustomEvent<AuthSessionChangedDetail>).detail?.authenticated) {
-				window.dispatchEvent(new Event("mailflare:message-counts-changed"));
+				window.dispatchEvent(new Event("kwings-mail:message-counts-changed"));
 			}
 		}
 

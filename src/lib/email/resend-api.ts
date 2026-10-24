@@ -4,7 +4,7 @@ const RESEND_API = "https://api.resend.com";
 
 export class ResendRestrictedKeyError extends Error {
 	constructor() {
-		super("This Resend key can only send mail, so Mailflare cannot add or check domains. Add the domain in the Resend dashboard, or use a full-access key.");
+		super("This Resend key can only send mail, so Kwings Mail cannot add or check domains. Add the domain in the Resend dashboard, or use a full-access key.");
 	}
 }
 

@@ -20,7 +20,7 @@ export function ScheduledSendBanner({ messageId, scheduledAt }: { messageId: str
 			const response = await authFetch(`/api/messages/${messageId}/cancel-schedule`, { method: "POST" });
 			if (!response.ok) throw new Error("Unable to cancel");
 			clearMessageDetailCache();
-			window.dispatchEvent(new Event("mailflare:messages-changed"));
+			window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 			router.push("/drafts");
 		} catch {
 			window.alert(t("schedule.cancelFailed"));

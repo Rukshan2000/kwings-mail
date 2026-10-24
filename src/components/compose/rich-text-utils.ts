@@ -6,9 +6,9 @@
 
 import { sanitizeEmailHtml } from "@/app/(dashboard)/inbox/[messageId]/email-html-sanitizer";
 
-export const QUOTE_ATTRIBUTE = "data-mailflare-quote";
-const QUOTE_OPEN = `<div class="mailflare-quote" ${QUOTE_ATTRIBUTE}="1">`;
-const SIGNATURE_ATTRIBUTE = "data-mailflare-signature";
+export const QUOTE_ATTRIBUTE = "data-kwings-mail-quote";
+const QUOTE_OPEN = `<div class="kwings-mail-quote" ${QUOTE_ATTRIBUTE}="1">`;
+const SIGNATURE_ATTRIBUTE = "data-kwings-mail-signature";
 
 export function escapeHtml(value: string): string {
 	return value
@@ -85,7 +85,7 @@ const BLOCK_TAGS = new Set(["p", "div", "li", "tr", "h1", "h2", "h3", "h4", "h5"
 /**
  * The text/plain alternative of a composed message. Blocks become lines, lists
  * get bullets or numbers, blockquotes get the classic "> " prefix so reply
- * chains stay readable in text-only clients and in Mailflare's own reader.
+ * chains stay readable in text-only clients and in Kwings Mail's own reader.
  */
 export function htmlToPlainText(html: string | null | undefined): string {
 	if (!html) return "";

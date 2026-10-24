@@ -5,4 +5,4 @@ export const LICENSE_PRODUCT_IDS: Record<Exclude<LicensePlan, "community">, stri
 	team: "6e42b54c-3221-4f8f-93a7-bab494f9e224",
 };
 
-export const LICENSE_STATUS_CHANGED_EVENT = "mailflare:license-status-changed";
+export const LICENSE_STATUS_CHANGED_EVENT = "kwings-mail:license-status-changed";

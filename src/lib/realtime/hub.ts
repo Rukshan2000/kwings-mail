@@ -14,7 +14,7 @@ export class RealtimeHub extends DurableObject<CloudflareEnv> {
 			const pair = new WebSocketPair();
 			const client = pair[0];
 			const server = pair[1];
-			const userId = request.headers.get("X-Mailflare-Realtime-User");
+			const userId = request.headers.get("X-Kwings-Mail-Realtime-User");
 			if (!userId) return new Response("Unauthorized", { status: 401 });
 			this.ctx.acceptWebSocket(server);
 			server.serializeAttachment({ userId });

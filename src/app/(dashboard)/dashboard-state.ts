@@ -21,7 +21,7 @@ export function useDashboardState() {
 		let cancelled = false;
 		void fetchCurrentUser().then((user) => {
 			if (cancelled || !user?.id) return;
-			const prefix = `mailflare-dashboard:${user.id}`;
+			const prefix = `kwings-mail-dashboard:${user.id}`;
 			try {
 				const savedOpen = localStorage.getItem(`${prefix}:assistant-open`);
 				const savedFullSize = localStorage.getItem(`${prefix}:assistant-full-size`);

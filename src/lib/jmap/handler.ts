@@ -28,7 +28,7 @@ export async function handleJmapRequest(request: Request, env: CloudflareEnv): P
 	if (!auth) {
 		return new Response(JSON.stringify({ error: "Unauthorized" }), {
 			status: 401,
-			headers: { ...JSON_HEADERS, "WWW-Authenticate": 'Basic realm="Mailflare JMAP", Bearer' },
+			headers: { ...JSON_HEADERS, "WWW-Authenticate": 'Basic realm="Kwings Mail JMAP", Bearer' },
 		});
 	}
 	if (!hasScope(auth.scopes, "jmap")) {
@@ -97,7 +97,7 @@ export async function handleJmapRequest(request: Request, env: CloudflareEnv): P
 }
 
 /**
- * Server-sent events. Mailflare has no per-account change log, so the stream
+ * Server-sent events. Kwings Mail has no per-account change log, so the stream
  * sends the current states on connect and again whenever they move, polling
  * every `ping` seconds (default 30, minimum 10) until the client leaves.
  */

@@ -27,7 +27,7 @@ interface CloudflareEnv {
 	APNS_TEAM_ID?: string;
 	/** The .p8 file contents (PKCS#8 PEM). */
 	APNS_PRIVATE_KEY?: string;
-	/** Origin of a Mailflare push relay (mailflare-relay); lets this server push without APNS_* keys. */
+	/** Origin of a Kwings Mail push relay (kwings-mail-relay); lets this server push without APNS_* keys. */
 	APNS_RELAY_URL?: string;
 	AGENT_RATE_LIMIT?: RateLimit;
 	/**
@@ -54,7 +54,7 @@ interface CloudflareEnv {
 	GITHUB_UPDATE_REF?: string;
 	GITHUB_UPDATE_REPO?: string;
 	/** "node" when served by the self-hosted runtime in server/; unset on Workers. */
-	MAILFLARE_RUNTIME?: "node";
+	KWINGS_MAIL_RUNTIME?: "node";
 	/** Shared secret the Cloudflare email relay signs inbound webhooks with (self-hosted only). */
 	INBOUND_WEBHOOK_SECRET?: string;
 	/** Cloudflare account id, needed for the Email Sending REST API off Workers. */

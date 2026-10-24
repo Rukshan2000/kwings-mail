@@ -19,9 +19,9 @@ export async function POST(request: Request) {
 
 	const raw = await request.arrayBuffer();
 	if (raw.byteLength > 25 * 1024 * 1024) return NextResponse.json({ error: "Message exceeds the 25 MiB receiving limit" }, { status: 413 });
-	const from = request.headers.get("x-mailflare-from") ?? "";
-	const to = request.headers.get("x-mailflare-to") ?? "";
-	const signature = request.headers.get("x-mailflare-signature") ?? "";
+	const from = request.headers.get("x-kwings-mail-from") ?? "";
+	const to = request.headers.get("x-kwings-mail-to") ?? "";
+	const signature = request.headers.get("x-kwings-mail-signature") ?? "";
 	if (!from || !to || !(await verifyInboundSignature(secret, signature, raw, from, to))) {
 		return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
 	}
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
 	let headers: Record<string, string> = {};
 	try {
-		headers = JSON.parse(request.headers.get("x-mailflare-headers") ?? "{}") as Record<string, string>;
+		headers = JSON.parse(request.headers.get("x-kwings-mail-headers") ?? "{}") as Record<string, string>;
 	} catch {
 		// The header map is advisory; the raw message is authoritative.
 	}

@@ -17,7 +17,7 @@ import packageMetadata from "../../../../../package.json";
 const GITHUB_API_URL = "https://api.github.com";
 const GITHUB_API_VERSION = "2026-03-10";
 const UPDATE_WORKFLOW = "deploy-update.yml";
-const UPDATE_SOURCE_REPOSITORY = "hieunc229/mailflare";
+const UPDATE_SOURCE_REPOSITORY = "hieunc229/kwings-mail";
 
 export async function authorizeAdminRequest(request: Request) {
   const env = getEnv();
@@ -85,7 +85,7 @@ async function githubRequest<T>(
     headers: {
       Accept: "application/vnd.github+json",
       Authorization: `Bearer ${env.GITHUB_UPDATE_TOKEN || ""}`,
-      "User-Agent": "mailflare",
+      "User-Agent": "kwings-mail",
       "Content-Type": "application/json",
       "X-GitHub-Api-Version": GITHUB_API_VERSION,
       ...init?.headers,

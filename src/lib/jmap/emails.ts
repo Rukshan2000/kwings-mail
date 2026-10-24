@@ -319,7 +319,7 @@ export const emailSet: JmapMethodHandler = async (ctx, args) => {
 		updated[id] = null;
 	}
 
-	// JMAP destroy is permanent; Mailflare keeps a trash, so destroy moves there
+	// JMAP destroy is permanent; Kwings Mail keeps a trash, so destroy moves there
 	// and a second destroy from Trash deletes the row.
 	const destroyIds = (args.destroy ?? []) as string[];
 	const destroyRows = await loadMessages(ctx, destroyIds);
@@ -347,7 +347,7 @@ export const emailSet: JmapMethodHandler = async (ctx, args) => {
  * that compose MIME locally send by uploading it, importing it into Drafts and
  * then submitting it, so this is the first half of their send path. The raw
  * bytes are kept verbatim under `drafts/` and the parsed headers fill the
- * columns the rest of Mailflare reads, including `providerMessageId`, which is
+ * columns the rest of Kwings Mail reads, including `providerMessageId`, which is
  * what lets a client find its own draft again with a Message-ID header filter.
  */
 async function importEmail(ctx: JmapContext, value: Record<string, unknown>, writable: Set<string>): Promise<{ id: string } | { error: JmapSetError }> {

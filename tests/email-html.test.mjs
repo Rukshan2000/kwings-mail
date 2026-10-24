@@ -138,14 +138,14 @@ test("editor preview blocks resources, preserves them for send and is stable on 
 	assert.doesNotMatch(template.content.querySelector("p").getAttribute("style"), /remote\.example/);
 	const outgoing = prepareEmailHtml(preview, { forOutgoing: true }).html;
 	for (const path of ["image", "large", "bg"]) assert.ok(outgoing.includes(`https://remote.example/${path}`));
-	assert.doesNotMatch(outgoing, /data-mailflare-(?:src|style)/);
+	assert.doesNotMatch(outgoing, /data-kwings-mail-(?:src|style)/);
 	assert.equal(sanitizeEditorHtml(outgoing), preview);
 });
 
 test("editor preview never includes stylesheets or loses signature markers", () => {
-	const result = sanitizeEditorHtml('<style>body{display:none}</style><div data-mailflare-signature="1">signature</div>');
+	const result = sanitizeEditorHtml('<style>body{display:none}</style><div data-kwings-mail-signature="1">signature</div>');
 	assert.doesNotMatch(result, /<style/);
-	assert.match(result, /data-mailflare-signature="1"/);
+	assert.match(result, /data-kwings-mail-signature="1"/);
 });
 
 test("ordinary outgoing fragments do not acquire wrappers on each edit", () => {
@@ -187,7 +187,7 @@ test("styled signatures are deterministic and editor copies are inert but export
 	assert.equal(prepareEmailHtml(source, { forOutgoing: true }).html, outgoing);
 	const preview = sanitizeEditorHtml(outgoing);
 	assert.doesNotMatch(preview, /<style/);
-	assert.match(preview, /data-mailflare-sheet/);
+	assert.match(preview, /data-kwings-mail-sheet/);
 	assert.match(prepareEmailHtml(preview, { forOutgoing: true }).html, /\.signature\{color:red;background:url\(https:\/\/remote.example\/bg\)/);
 	assert.equal(sanitizeEditorHtml(prepareEmailHtml(preview, { forOutgoing: true }).html), preview);
 });

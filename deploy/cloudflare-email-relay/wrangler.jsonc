@@ -1,9 +1,9 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "mailflare-email-relay",
+	"name": "kwings-mail-email-relay",
 	"main": "src/index.ts",
 	"compatibility_date": "2026-05-20",
-	// Set with `wrangler secret put`: MAILFLARE_URL (https://mail.example.com) and
+	// Set with `wrangler secret put`: KWINGS_MAIL_URL (https://mail.example.com) and
 	// INBOUND_WEBHOOK_SECRET (same value as on the self-hosted server).
 	"observability": { "enabled": true }
 }

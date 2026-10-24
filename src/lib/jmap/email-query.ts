@@ -42,7 +42,7 @@ function likePattern(value: string): string {
 
 /**
  * RFC 8621 §4.4.1 `header`: `[name]` means the header is present, `[name, value]`
- * that its value equals that string. Only the headers Mailflare keeps as columns
+ * that its value equals that string. Only the headers Kwings Mail keeps as columns
  * can be matched, and Message-IDs compare without their angle brackets because
  * inbound rows store them with and outbound rows without.
  */

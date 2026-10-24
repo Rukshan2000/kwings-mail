@@ -32,12 +32,12 @@ export function createNodeRuntime(): NodeRuntime {
 	const dataDir = resolve(optional("DATA_DIR") ?? "./data");
 	mkdirSync(join(dataDir, "blobs"), { recursive: true });
 
-	const database = openSqliteDatabase(join(dataDir, "mailflare.sqlite"));
+	const database = openSqliteDatabase(join(dataDir, "kwings-mail.sqlite"));
 	const bucket = openFileBucket(join(dataDir, "blobs"));
 	const mailer = openMailer(mailerConfig());
-	const inboundQueue = openQueue("mailflare-inbound");
-	const outboundQueue = openQueue("mailflare-outbound");
-	const agentQueue = openQueue("mailflare-agent");
+	const inboundQueue = openQueue("kwings-mail-inbound");
+	const outboundQueue = openQueue("kwings-mail-outbound");
+	const agentQueue = openQueue("kwings-mail-agent");
 	const realtime = new RealtimeHubRegistry();
 	const publicDir = resolve(optional("PUBLIC_DIR") ?? "./public");
 
@@ -74,7 +74,7 @@ export function createNodeRuntime(): NodeRuntime {
 		GITHUB_UPDATE_REF: optional("GITHUB_UPDATE_REF"),
 		GITHUB_UPDATE_REPO: optional("GITHUB_UPDATE_REPO"),
 		// Marks the runtime for the few places that must behave differently.
-		MAILFLARE_RUNTIME: "node",
+		KWINGS_MAIL_RUNTIME: "node",
 		APP_URL: optional("APP_URL")?.replace(/\/$/, ""),
 		INBOUND_WEBHOOK_SECRET: optional("INBOUND_WEBHOOK_SECRET"),
 		VAPID_PUBLIC_KEY: optional("VAPID_PUBLIC_KEY"),

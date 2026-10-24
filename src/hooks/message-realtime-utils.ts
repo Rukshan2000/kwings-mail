@@ -4,7 +4,7 @@ import { hasActivePushSubscription } from "@/lib/push/client";
 export const REALTIME_FALLBACK_INTERVAL_MS = 60_000;
 export const REALTIME_HEARTBEAT_INTERVAL_MS = 25_000;
 export const REALTIME_RECONNECT_MAX_MS = 30_000;
-const BROWSER_NOTIFICATIONS_ENABLED_KEY = "mailflare:browser-notifications-enabled";
+const BROWSER_NOTIFICATIONS_ENABLED_KEY = "kwings-mail:browser-notifications-enabled";
 
 export function areBrowserNotificationsEnabled(): boolean {
 	try {

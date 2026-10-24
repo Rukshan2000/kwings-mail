@@ -108,9 +108,9 @@ test("messages and folders events invalidate in-flight and cached data", async (
 		let calls = 0;
 		globalThis.folderFetch = async () => { calls++; return response([{ id: String(calls) }]); };
 		await client.getMailboxFolders("mb1");
-		window.dispatchEvent(new window.Event("mailflare:messages-changed"));
+		window.dispatchEvent(new window.Event("kwings-mail:messages-changed"));
 		await client.getMailboxFolders("mb1");
-		window.dispatchEvent(new window.Event("mailflare:folders-changed"));
+		window.dispatchEvent(new window.Event("kwings-mail:folders-changed"));
 		await client.getMailboxFolders("mb1");
 		assert.equal(calls, 3);
 	} finally { cleanup(); }
@@ -124,7 +124,7 @@ test("pending callers receive fresh folders after a messages event", async () =>
 		const first = client.getMailboxFolders("mb1");
 		const second = client.getMailboxFolders("mb1");
 		assert.equal(resolvers.length, 1);
-		window.dispatchEvent(new window.Event("mailflare:messages-changed"));
+		window.dispatchEvent(new window.Event("kwings-mail:messages-changed"));
 		resolvers[0](response([{ id: "stale" }]));
 		await new Promise(resolve => setImmediate(resolve));
 		assert.equal(resolvers.length, 2);
@@ -135,7 +135,7 @@ test("pending callers receive fresh folders after a messages event", async () =>
 	} finally { cleanup(); }
 });
 
-for (const invalidation of ["mailflare:folders-changed", "explicit invalidation"]) {
+for (const invalidation of ["kwings-mail:folders-changed", "explicit invalidation"]) {
 	test(`pending caller retries after ${invalidation}`, async () => {
 		await setup();
 		try {
@@ -159,7 +159,7 @@ test("a stale caller joins the replacement request without overwriting it", asyn
 		const resolvers = [];
 		globalThis.folderFetch = () => new Promise(resolve => { resolvers.push(resolve); });
 		const staleCaller = client.getMailboxFolders("mb1");
-		window.dispatchEvent(new window.Event("mailflare:messages-changed"));
+		window.dispatchEvent(new window.Event("kwings-mail:messages-changed"));
 		const freshCaller = client.getMailboxFolders("mb1");
 		assert.equal(resolvers.length, 2);
 		resolvers[0](response([{ id: "stale" }]));
@@ -192,7 +192,7 @@ test("continuous invalidation has a bounded retry count", async () => {
 			ok: true,
 			json: async () => {
 				calls++;
-				window.dispatchEvent(new window.Event("mailflare:messages-changed"));
+				window.dispatchEvent(new window.Event("kwings-mail:messages-changed"));
 				return { folders: [{ id: String(calls) }] };
 			},
 		});

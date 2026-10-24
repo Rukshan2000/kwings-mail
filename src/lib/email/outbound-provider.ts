@@ -60,7 +60,7 @@ function toBase64(buffer: ArrayBuffer): string {
 
 /** Resend does not return the RFC 5322 Message-ID, so we mint one for replies to thread against. */
 function mintMessageId(from: string): string {
-	const domain = getEmailAddress(from).split("@")[1] || "mailflare.local";
+	const domain = getEmailAddress(from).split("@")[1] || "kwings-mail.local";
 	return `<${crypto.randomUUID()}@${domain}>`;
 }
 

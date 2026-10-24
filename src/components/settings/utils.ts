@@ -129,7 +129,7 @@ export async function createJmapApiKey(name: string, mailboxIds: string[]): Prom
 	});
 	const data = (await res.json().catch(() => ({}))) as { key?: string; error?: unknown };
 	if (!res.ok || !data.key) throw new Error(typeof data.error === "string" ? data.error : "Could not create a key");
-	window.dispatchEvent(new Event("mailflare:api-keys-changed"));
+	window.dispatchEvent(new Event("kwings-mail:api-keys-changed"));
 	return data.key;
 }
 

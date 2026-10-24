@@ -57,11 +57,11 @@ export function useMessages(
 				void loadMessages(true);
 			}, REFRESH_DEBOUNCE_MS);
 		}
-		window.addEventListener("mailflare:messages-changed", onMessagesChanged);
+		window.addEventListener("kwings-mail:messages-changed", onMessagesChanged);
 
 		return () => {
 			cancelled = true;
-			window.removeEventListener("mailflare:messages-changed", onMessagesChanged);
+			window.removeEventListener("kwings-mail:messages-changed", onMessagesChanged);
 			if (refreshTimer) window.clearTimeout(refreshTimer);
 		};
 	}, [enabled, filters?.group, filters?.limit, filters?.offset, filters?.query, filters?.read, filters?.title, folder, folderId, mailboxId]);

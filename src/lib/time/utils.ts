@@ -35,7 +35,7 @@ export function isValidTimeZone(value: string): boolean {
 export function getUserTimeZone(): string {
 	if (typeof window !== "undefined") {
 		try {
-			const saved = JSON.parse(window.localStorage.getItem("mailflare-user-time-zone") ?? "null") as { timeZone?: unknown } | null;
+			const saved = JSON.parse(window.localStorage.getItem("kwings-mail-user-time-zone") ?? "null") as { timeZone?: unknown } | null;
 			if (typeof saved?.timeZone === "string" && isValidTimeZone(saved.timeZone)) return normalizeTimeZone(saved.timeZone);
 		} catch { /* Device time remains available without storage. */ }
 	}

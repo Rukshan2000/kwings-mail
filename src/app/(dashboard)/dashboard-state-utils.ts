@@ -1,5 +1,5 @@
-const ASSISTANT_OPEN_KEY = "mailflare-dashboard:assistant-open";
-const ASSISTANT_FULL_SIZE_KEY = "mailflare-dashboard:assistant-full-size";
+const ASSISTANT_OPEN_KEY = "kwings-mail-dashboard:assistant-open";
+const ASSISTANT_FULL_SIZE_KEY = "kwings-mail-dashboard:assistant-full-size";
 
 export function readInitialAssistantPanelState() {
 	if (typeof window === "undefined") return { open: false, fullSize: false };

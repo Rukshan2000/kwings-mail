@@ -24,7 +24,7 @@ export function startSmtpListener(
 		disabledCommands: options.tls ? ["AUTH"] : ["AUTH", "STARTTLS"],
 		...(options.tls ? { key: readFileSync(options.tls.keyPath), cert: readFileSync(options.tls.certPath) } : {}),
 		size: options.maxSize,
-		banner: "Mailflare",
+		banner: "Kwings Mail",
 		onData(stream, session: SMTPServerSession, callback) {
 			const chunks: Buffer[] = [];
 			stream.on("data", (chunk: Buffer) => chunks.push(chunk));

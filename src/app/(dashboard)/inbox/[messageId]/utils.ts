@@ -53,7 +53,7 @@ export function getMessageBodyDisplay(
 	fallback: string | null | undefined,
 	ownAddress?: string,
 ): MessageBodyDisplay {
-	// A message composed in Mailflare marks its quoted part, so the rich body can
+	// A message composed in Kwings Mail marks its quoted part, so the rich body can
 	// stay rich and the quote fold on its own. Other mail falls back to the
 	// text heuristics, which can only render the result as text.
 	const marked = splitQuotedHtml(htmlBody);

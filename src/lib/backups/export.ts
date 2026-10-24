@@ -87,7 +87,7 @@ export async function exportDatabaseRecords(db: D1Database, excludedGroups: Back
 		const result = await db.prepare(`SELECT * FROM ${table}`).all<DatabaseRecord>();
 		tables[table] = result.results;
 	}
-	const document: DatabaseBackupDocument = { format: "mailflare-database-backup", version: 2, createdAt: new Date().toISOString(), includedTables, tables };
+	const document: DatabaseBackupDocument = { format: "kwings-mail-database-backup", version: 2, createdAt: new Date().toISOString(), includedTables, tables };
 	return new TextEncoder().encode(JSON.stringify(document));
 }
 
@@ -124,15 +124,15 @@ export async function restoreDatabaseRecords(db: D1Database, content: ArrayBuffe
 
 function parseDatabaseBackup(content: ArrayBuffer): DatabaseBackupDocument {
 	let value: unknown;
-	try { value = JSON.parse(new TextDecoder().decode(content)); } catch { throw new Error("The selected file is not a valid Mailflare backup"); }
-	if (!isDatabaseBackupDocument(value)) throw new Error("The selected file is not a valid Mailflare backup");
+	try { value = JSON.parse(new TextDecoder().decode(content)); } catch { throw new Error("The selected file is not a valid Kwings Mail backup"); }
+	if (!isDatabaseBackupDocument(value)) throw new Error("The selected file is not a valid Kwings Mail backup");
 	return value;
 }
 
 function isDatabaseBackupDocument(value: unknown): value is DatabaseBackupDocument {
 	if (!value || typeof value !== "object") return false;
 	const document = value as Partial<DatabaseBackupDocument>;
-	if (document.format !== "mailflare-database-backup" || typeof document.version !== "number" || ![1, 2].includes(document.version) || !document.tables) return false;
+	if (document.format !== "kwings-mail-database-backup" || typeof document.version !== "number" || ![1, 2].includes(document.version) || !document.tables) return false;
 	if (document.includedTables) {
 		if (!Array.isArray(document.includedTables) || !document.includedTables.length || new Set(document.includedTables).size !== document.includedTables.length) return false;
 		if (!document.includedTables.every((table) => BACKUP_TABLES.includes(table) && Array.isArray(document.tables?.[table]))) return false;

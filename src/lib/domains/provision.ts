@@ -16,7 +16,7 @@ import { ensureSendingSubdomain } from "@/lib/domains/sending-subdomain";
 
 /** Node/Docker has no Email Worker; a catch-all PUT to one 404s (CF 2016). */
 export function shouldBindEmailCatchAllToWorker(
-	env?: Pick<CloudflareEnv, "MAILFLARE_RUNTIME">,
+	env?: Pick<CloudflareEnv, "KWINGS_MAIL_RUNTIME">,
 ): boolean {
 	return !isNodeRuntime(env);
 }

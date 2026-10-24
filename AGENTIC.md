@@ -4,13 +4,13 @@ Status: initial implementation added September 24, 2026. The feature contract an
 
 ## Goal and recommended scope
 
-Add a built-in email assistant, automatic draft replies for eligible inbound mail, and an MCP server for external assistants. Reuse Mailflare's mail storage, composer, search, permissions, and delivery services. Every agent-originated send must require a human to review and explicitly approve the exact outgoing message.
+Add a built-in email assistant, automatic draft replies for eligible inbound mail, and an MCP server for external assistants. Reuse Kwings Mail's mail storage, composer, search, permissions, and delivery services. Every agent-originated send must require a human to review and explicitly approve the exact outgoing message.
 
 Recommended first release:
 
 - A mailbox-aware side panel with nine email tools, persistent private conversations, streaming responses, visible tool activity, and links into the existing composer.
 - Opt-in auto-drafting per mailbox, with one designated reviewer and durable background jobs.
-- An authenticated `/mcp` endpoint exposing the same mail operations, plus mailbox discovery and draft updates. External assistants request a send review; approval happens in Mailflare.
+- An authenticated `/mcp` endpoint exposing the same mail operations, plus mailbox discovery and draft updates. External assistants request a send review; approval happens in Kwings Mail.
 - Cloudflare and Docker support through shared application services and runtime-specific model/queue adapters.
 
 Keep autonomous sending, arbitrary third-party MCP connections, attachment interpretation, web browsing, permanent email deletion, bulk actions, and collaborative shared chat out of the first release.
@@ -19,21 +19,21 @@ Keep autonomous sending, arbitrary third-party MCP connections, attachment inter
 
 Source snapshot: Cloudflare's [agentic-inbox at commit `48039bb`](https://github.com/cloudflare/agentic-inbox/tree/48039bb6785af34e592c2966f87cde2b255c4c80). The implementation is more precise than the README's description of “9 email tools … and sending.”
 
-| Area | Observed behavior | Adaptation for Mailflare |
+| Area | Observed behavior | Adaptation for Kwings Mail |
 | --- | --- | --- |
 | Built-in agent | `EmailAgent` extends `AIChatAgent`; nine tools, none of which sends email. Uses Workers AI, streaming chat, and a five-step limit. | Keep the nine-tool draft-first workflow; provide explicit send review through the UI. |
 | Auto-draft | Inbound storage triggers `/onNewEmail` through `ctx.waitUntil`. The agent reads the email/thread, uses fresh model context, and saves a draft. | Use recoverable jobs after successful intake; do not make model availability part of mail delivery. |
 | Prompt and history | Mailbox prompt settings live in R2; agent history lives in a mailbox-named Durable Object. | Store settings/history in D1 or SQLite; private conversations belong to a user and mailbox. |
 | Draft quality | Scans inbound/thread text for prompt injection and uses a second model to remove commentary from drafts. | Treat scans as optional defense; enforce authority in code and reject malformed/empty drafts. |
 | MCP | `EmailMCP` registers 13 tools, including direct send and permanent deletion. Shared helper functions serve both MCP and chat. | Share one authorized service layer; omit permanent deletion and replace direct sending with review requests. |
-| Authentication | Cloudflare Access is the single trust boundary; authorized users can operate on all mailboxes. | Preserve Mailflare's account, delegation, disabled-account, and mailbox checks on every operation. |
-| UI | Agent panel displays streaming Markdown, tool activity, and a composer handoff; MCP panel displays connection information. | Follow existing Mailflare components, navigation, and composer behavior. |
+| Authentication | Cloudflare Access is the single trust boundary; authorized users can operate on all mailboxes. | Preserve Kwings Mail's account, delegation, disabled-account, and mailbox checks on every operation. |
+| UI | Agent panel displays streaming Markdown, tool activity, and a composer handoff; MCP panel displays connection information. | Follow existing Kwings Mail components, navigation, and composer behavior. |
 
 These observations come from the pinned [agent implementation](https://github.com/cloudflare/agentic-inbox/blob/48039bb6785af34e592c2966f87cde2b255c4c80/workers/agent/index.ts), [MCP implementation](https://github.com/cloudflare/agentic-inbox/blob/48039bb6785af34e592c2966f87cde2b255c4c80/workers/mcp/index.ts), [shared tools](https://github.com/cloudflare/agentic-inbox/blob/48039bb6785af34e592c2966f87cde2b255c4c80/workers/lib/tools.ts), [inbound handler](https://github.com/cloudflare/agentic-inbox/blob/48039bb6785af34e592c2966f87cde2b255c4c80/workers/index.ts), [authentication/routing](https://github.com/cloudflare/agentic-inbox/blob/48039bb6785af34e592c2966f87cde2b255c4c80/workers/app.ts), and [agent UI](https://github.com/cloudflare/agentic-inbox/blob/48039bb6785af34e592c2966f87cde2b255c4c80/app/components/AgentPanel.tsx).
 
 Important distinction: the reference MCP send descriptions ask the caller to obtain confirmation, but their handlers accept message content and call delivery without a server-side approval record. That does not enforce the approval requirement needed here. Its built-in agent avoids this by having no send tool.
 
-## Existing Mailflare foundations and integration gaps
+## Existing Kwings Mail foundations and integration gaps
 
 | Existing area | Relevant files | Implication |
 | --- | --- | --- |
@@ -74,10 +74,10 @@ Use one schema/handler registry with adapters for the model and MCP. Chat binds 
 | `list_emails` | Folder/status filter, cursor, bounded limit; returns metadata and next cursor. | Authorized mailbox only; default 20, maximum 50. Show only the caller's drafts. |
 | `get_email` | Message ID; returns text body, metadata, attachment metadata, and truncation information. | Verify message belongs to the active mailbox; omit attachment bytes and internal storage keys. |
 | `get_thread` | Anchor message ID; returns chronological messages and continuation/truncation information. | Adapt existing thread service; enforce mailbox and draft-owner boundaries on every returned row. |
-| `search_emails` | Query, optional folder, cursor; returns snippets and IDs. | Reuse Mailflare search semantics and indexes; no model-supplied SQL. |
+| `search_emails` | Query, optional folder, cursor; returns snippets and IDs. | Reuse Kwings Mail search semantics and indexes; no model-supplied SQL. |
 | `draft_email` | Recipients, subject, body; returns draft ID and composer link. | Require sender permission; resolve From server-side. Save under the requesting user. |
 | `draft_reply` | Source message ID, body, reply/reply-all mode; returns linked draft. | Derive recipients and RFC threading headers server-side. Handle Reply-To, aliases, and self-address exclusion using shared reply logic. |
-| `mark_email_read` | Message ID and read boolean; returns updated state. | Apply existing Mailflare mutation permissions; add unread support in the shared service if needed. |
+| `mark_email_read` | Message ID and read boolean; returns updated state. | Apply existing Kwings Mail mutation permissions; add unread support in the shared service if needed. |
 | `move_email` | Message ID and allowed destination; returns updated state. | Reuse existing move/status policy. Validate custom-folder ownership. Never manufacture sent/draft state or permanently delete. |
 | `discard_draft` | Draft ID and expected revision; returns discarded state. | Caller-owned draft only; require an explicit user action before discarding human-edited content. |
 
@@ -131,7 +131,7 @@ Expose an MCP **server** for external clients; the built-in assistant calls the 
 - Add `mcp:read`, `mcp:draft`, `mcp:organize`, and `mcp:request-send` scopes. Require the matching scope plus current user/mailbox permission. `list_mailboxes` returns the intersection of current access and the key allowlist. Carry key ID in auth context for revocation/auditing; it is absent from the current `ApiAuthResult`.
 - Reject mixed MCP/legacy-send/JMAP/wildcard credentials in this mode. Do not accept browser session cookies as MCP authentication. Never put keys in URLs or chat messages.
 - Expose the nine shared tools plus `list_mailboxes`, `update_draft` with expected revision, `request_send`, and `get_send_request`. Map each tool to its scope, and check scope in execution as well as discovery.
-- `request_send(draftId, expectedRevision)` returns `pending_approval`, an approval ID, and a Mailflare review URL. `get_send_request` returns pending/sent/failed/expired status to the originating authorized principal. Neither operation grants approval or sends directly. Document this intentional difference from upstream `send_email`/`send_reply`.
+- `request_send(draftId, expectedRevision)` returns `pending_approval`, an approval ID, and a Kwings Mail review URL. `get_send_request` returns pending/sent/failed/expired status to the originating authorized principal. Neither operation grants approval or sends directly. Document this intentional difference from upstream `send_email`/`send_reply`.
 - Validate Origin when present, bound inputs/results and request rates, and authenticate every request. If compatibility requires stateful sessions, bind each session to the same user/key and recheck access; a session ID is not authorization.
 - Add a connection screen showing the endpoint, supported client/auth mode, selected mailboxes, scopes, last use, and revocation. Show newly generated secrets only once; generated examples use placeholders after that.
 
@@ -192,7 +192,7 @@ New code should follow the repository convention: helper functions in separate f
 | `src/lib/realtime/`, relevant hooks | Draft/job event types and authorized notifications/query invalidation on both runtimes. |
 | Schema/migrations/config/docs | Additive schema, AI queue and provider configuration, MCP scopes/key UI, deployment and self-hosting instructions. |
 
-Dependencies to evaluate and pin during implementation: `ai`, its React integration, `workers-ai-provider`, an HTTP model-provider adapter, the official MCP TypeScript SDK, and a Markdown renderer if needed. Mailflare uses Zod 4; the reference uses Zod 3, so do not copy its dependency versions or tool typings blindly. No model/provider credentials enter client bundles. On Cloudflare, add the [`AI` binding](https://developers.cloudflare.com/workers-ai/configuration/bindings/) and a dedicated agent queue; use a frequent recovery schedule alongside the existing backup cron. Docker uses persisted jobs with its local scheduler and server-only provider credentials. Missing AI configuration disables generation gracefully; authorized MCP reads/draft CRUD can still work without a model.
+Dependencies to evaluate and pin during implementation: `ai`, its React integration, `workers-ai-provider`, an HTTP model-provider adapter, the official MCP TypeScript SDK, and a Markdown renderer if needed. Kwings Mail uses Zod 4; the reference uses Zod 3, so do not copy its dependency versions or tool typings blindly. No model/provider credentials enter client bundles. On Cloudflare, add the [`AI` binding](https://developers.cloudflare.com/workers-ai/configuration/bindings/) and a dedicated agent queue; use a frequent recovery schedule alongside the existing backup cron. Docker uses persisted jobs with its local scheduler and server-only provider credentials. Missing AI configuration disables generation gracefully; authorized MCP reads/draft CRUD can still work without a model.
 
 ## Delivery sequence and acceptance criteria
 
@@ -214,7 +214,7 @@ Acceptance: users can summarize/search/draft with visible tool results; history 
 
 Add transport and connection settings using the shared services. Document the supported protocol versions and authentication mode with actual client examples once integration is exercised.
 
-Acceptance: scoped clients discover and use allowed tools; revoked/disabled principals lose access; cross-mailbox IDs and legacy send endpoints cannot bypass scope; a send request remains pending until a Mailflare browser approval; MCP reading/drafting works without a configured AI model.
+Acceptance: scoped clients discover and use allowed tools; revoked/disabled principals lose access; cross-mailbox IDs and legacy send endpoints cannot bypass scope; a send request remains pending until a Kwings Mail browser approval; MCP reading/drafting works without a configured AI model.
 
 ### Phase 4 — Auto-drafting
 

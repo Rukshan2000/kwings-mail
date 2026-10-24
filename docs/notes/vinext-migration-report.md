@@ -4,7 +4,7 @@ Checked 28 September 2026 against PR #52 (`26923a4`). The OpenNext comparison ch
 
 ## Conclusion
 
-No breaking application behavior was reproduced in the local paths exercised. The vinext Worker builds, previews, and passes a Wrangler deployment dry run; its HTTP, email, queue, and scheduled entrypoints work locally. **One new tooling regression should be fixed before merging:** the locked dependency set makes `tsc --noEmit` stop while parsing a dependency declaration, before it can check Mailflare source.
+No breaking application behavior was reproduced in the local paths exercised. The vinext Worker builds, previews, and passes a Wrangler deployment dry run; its HTTP, email, queue, and scheduled entrypoints work locally. **One new tooling regression should be fixed before merging:** the locked dependency set makes `tsc --noEmit` stop while parsing a dependency declaration, before it can check Kwings Mail source.
 
 ## Finding: TypeScript checking stops in a new dependency (P2)
 
@@ -22,7 +22,7 @@ Impact: the project cannot use its normal type-check command to find migration o
 | `wrangler dev --local` with isolated persistence | Passed. All 44 D1 migrations applied. A test Email Routing event returned `outcome: ok`, stored a 265-byte raw MIME object in R2, and dispatched one inbound queue message (`1/1`). The message had no configured recipient, so this did **not** prove inbox delivery. A `*/5 * * * *` scheduled invocation returned `outcome: ok`. `/` and `/api/setup/status` returned 200; `/api/realtime` returned 426 without an upgrade. |
 | `npm run build:node` and isolated Node runtime | Passed. The Node server applied 44 migrations in a temporary data directory. `/`, `/api/setup/status`, and `/api/branding/icon` returned 200; `/api/auth/me` returned 401 without credentials. |
 | `node --test tests/*.test.mjs` | PR: 27 passed, 3 failed. OpenNext `main`, using Node 24: the same 27 passed and the same 3 failed (agent email-tools assertion and two bootstrap-schema assertions). These are not migration regressions. |
-| ESLint on changed code files | 0 errors, 1 unused `ctx` warning in `worker.ts`. Repository-wide `npm run lint` failed amid unrelated local `.agents` and `mailflare-landing`/generated files, so it is not a useful migration comparison in this checkout. |
+| ESLint on changed code files | 0 errors, 1 unused `ctx` warning in `worker.ts`. Repository-wide `npm run lint` failed amid unrelated local `.agents` and `kwings-mail-landing`/generated files, so it is not a useful migration comparison in this checkout. |
 
 The separate OpenNext `main` production build was attempted in an isolated worktree but did not finish: its fresh npm installation could not load the optional native `@tailwindcss/oxide-darwin-arm64` binding from Turbopack, even after a local dependency repair attempt. That environment failure does not establish an OpenNext/vinext behavior difference.
 
@@ -33,4 +33,4 @@ The separate OpenNext `main` production build was attempted in an isolated workt
 - Exercise authenticated inbox, message actions, JMAP/MCP clients, and Workers AI on that deployment. These paths were not covered by the smoke checks here. The PR description reports broader local browser testing, but this report did not independently repeat it.
 - Inspect Cloudflare build/deploy settings for installations that still invoke OpenNext. The PR changes `npm run build` and `npm run deploy` to vinext; an account-specific command can bypass them.
 
-The generated-config deployment path used here matches [Cloudflare's Vite plugin deployment guide](https://developers.cloudflare.com/workers/vite-plugin/tutorial/). All runtime writes made for the Worker event checks used `/tmp/mailflare-pr52-cf-audit`; the Node check used `/tmp/mailflare-pr52-node-audit`. Existing local app data and the user's `.gitignore` and `.wrangler.dev.json` were left untouched.
+The generated-config deployment path used here matches [Cloudflare's Vite plugin deployment guide](https://developers.cloudflare.com/workers/vite-plugin/tutorial/). All runtime writes made for the Worker event checks used `/tmp/kwings-mail-pr52-cf-audit`; the Node check used `/tmp/kwings-mail-pr52-node-audit`. Existing local app data and the user's `.gitignore` and `.wrangler.dev.json` were left untouched.

@@ -26,7 +26,7 @@ function addressString(value: string | { name?: string; email: string }): string
 }
 
 function messageIdFor(from: Builder["from"]): string {
-	const domain = getEmailAddress(addressString(from)).split("@")[1] || "mailflare.local";
+	const domain = getEmailAddress(addressString(from)).split("@")[1] || "kwings-mail.local";
 	return `<${crypto.randomUUID()}@${domain}>`;
 }
 

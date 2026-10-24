@@ -7,7 +7,7 @@ import { build } from "esbuild";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const migrationsDirectory = join(root, "drizzle/migrations");
-const bundleDirectory = mkdtempSync(join(root, "node_modules", "mailflare-bootstrap-bundle-"));
+const bundleDirectory = mkdtempSync(join(root, "node_modules", "kwings-mail-bootstrap-bundle-"));
 after(() => rmSync(bundleDirectory, { recursive: true, force: true }));
 
 await build({

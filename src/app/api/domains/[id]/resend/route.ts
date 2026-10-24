@@ -43,7 +43,7 @@ export async function POST(request: Request, { params }: Params) {
 		if (body.action === "test") {
 			const sent = await sendSystemEmail(env, {
 				to: user.email,
-				subject: "Mailflare test email",
+				subject: "Kwings Mail test email",
 				text: `This message confirms ${domain.hostname} can send mail through Resend.`,
 				hostname: domain.hostname,
 			});

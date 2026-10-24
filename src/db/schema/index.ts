@@ -738,14 +738,14 @@ export const backupSettings = sqliteTable("backup_settings", {
 
 export const appSettings = sqliteTable("app_settings", {
 	id: text("id").primaryKey(),
-	appName: text("app_name").notNull().default("Mailflare"),
+	appName: text("app_name").notNull().default("Kwings Mail"),
 	outboundAttachmentMaxMb: integer("outbound_attachment_max_mb").notNull().default(25),
 	/** Per-user Drive storage cap in bytes; null means unlimited. */
 	driveStorageLimitBytes: integer("drive_storage_limit_bytes"),
 	resendApiKey: text("resend_api_key"),
 	/** JSON: AWS access key, secret and region (see src/lib/aws/config.ts). */
 	awsConfig: text("aws_config"),
-	/** JSON: the shared SES inbound resources Mailflare created (bucket, topic, rule set, webhook token). */
+	/** JSON: the shared SES inbound resources Kwings Mail created (bucket, topic, rule set, webhook token). */
 	sesReceiving: text("ses_receiving"),
 	resendWebhookId: text("resend_webhook_id"),
 	resendWebhookSecret: text("resend_webhook_secret"),

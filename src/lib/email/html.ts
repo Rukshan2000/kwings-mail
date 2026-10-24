@@ -14,7 +14,7 @@ type MailDocument = { template: HTMLTemplateElement; rootTag: string; bodyTag: s
 const nameOf = (name: string) => css.ident.decode(name).toLowerCase();
 const BLOCKED_IMAGE = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 const RESOURCE_ATTRIBUTES = ["src", "background", "poster"];
-const EDITOR_ATTRIBUTES = ["data-mailflare-src", "data-mailflare-background", "data-mailflare-poster", "data-mailflare-srcset", "data-mailflare-style", "data-mailflare-sheet"];
+const EDITOR_ATTRIBUTES = ["data-kwings-mail-src", "data-kwings-mail-background", "data-kwings-mail-poster", "data-kwings-mail-srcset", "data-kwings-mail-style", "data-kwings-mail-sheet"];
 
 function outgoingScope(source: string): string {
 	// Stable presentation names keep repeated signature generation comparable. These are
@@ -238,10 +238,10 @@ export function prepareEmailHtml(source: string, options: Options = {}) {
 	};
 	const root = template.content.querySelector<HTMLDivElement>(rootTag)!;
 	const body = template.content.querySelector<HTMLDivElement>(bodyTag)!;
-	for (const placeholder of template.content.querySelectorAll("[data-mailflare-sheet]")) {
+	for (const placeholder of template.content.querySelectorAll("[data-kwings-mail-sheet]")) {
 		try {
 			const style = document.createElement("style");
-			style.textContent = decodeURIComponent(placeholder.getAttribute("data-mailflare-sheet")!);
+			style.textContent = decodeURIComponent(placeholder.getAttribute("data-kwings-mail-sheet")!);
 			placeholder.replaceWith(style);
 		} catch { placeholder.remove(); }
 	}
@@ -259,7 +259,7 @@ export function prepareEmailHtml(source: string, options: Options = {}) {
 				// Keep a non-executable copy for sending; never install mail CSS into the editor document.
 				const placeholder = document.createElement("span");
 				placeholder.hidden = true;
-				placeholder.setAttribute("data-mailflare-sheet", encodeURIComponent(transformCss(element.textContent ?? "", false, value => value, undefined, false, true)));
+				placeholder.setAttribute("data-kwings-mail-sheet", encodeURIComponent(transformCss(element.textContent ?? "", false, value => value, undefined, false, true)));
 				if (element.parentElement === root) {
 					editorHeadStyles.appendChild(placeholder);
 					element.remove();
@@ -271,14 +271,14 @@ export function prepareEmailHtml(source: string, options: Options = {}) {
 		}
 		// Editor placeholders preserve source addresses without loading them. Validate again on send.
 		for (const attr of [...RESOURCE_ATTRIBUTES, "srcset", "style"]) {
-			const stored = element.getAttribute(`data-mailflare-${attr}`);
+			const stored = element.getAttribute(`data-kwings-mail-${attr}`);
 			if (stored !== null) element.setAttribute(attr, attr === "style" ? restoreEditorStyle(element.getAttribute("style") ?? "", stored) : stored);
-			element.removeAttribute(`data-mailflare-${attr}`);
+			element.removeAttribute(`data-kwings-mail-${attr}`);
 		}
 		if (element.hasAttribute("style")) {
 			const original = element.getAttribute("style")!;
 			const safe = transformCss(original, true, resource, options.reader ? doc : undefined, false, allowIndirect, markIndirect);
-			if (options.editor && original !== safe) element.setAttribute("data-mailflare-style", encodeURIComponent(transformCss(original, true, value => {
+			if (options.editor && original !== safe) element.setAttribute("data-kwings-mail-style", encodeURIComponent(transformCss(original, true, value => {
 				try { const url = new URL(value); return ["http:", "https:"].includes(url.protocol) ? url.href : resource(value); }
 				catch { return resource(value); }
 			}, undefined, false, true)));
@@ -290,14 +290,14 @@ export function prepareEmailHtml(source: string, options: Options = {}) {
 			const value = resource(original);
 			if (value) element.setAttribute(attr, value);
 			else {
-				if (options.editor) element.setAttribute(`data-mailflare-${attr}`, original);
+				if (options.editor) element.setAttribute(`data-kwings-mail-${attr}`, original);
 				element.removeAttribute(attr);
 			}
 		}
 		if (element.hasAttribute("srcset")) {
 			const original = element.getAttribute("srcset")!;
 			const value = mapSrcset(original, resource);
-			if (options.editor) element.setAttribute("data-mailflare-srcset", original);
+			if (options.editor) element.setAttribute("data-kwings-mail-srcset", original);
 			if (value) element.setAttribute("srcset", value); else element.removeAttribute("srcset");
 		}
 		if (element.tagName === "A") {
@@ -325,7 +325,7 @@ export function prepareEmailHtml(source: string, options: Options = {}) {
 	const cleaned = purifier.sanitize(template.content, {
 		USE_PROFILES: { html: true },
 		ADD_TAGS: ["style", rootTag, bodyTag],
-		ADD_ATTR: ["target", "loading", "referrerpolicy", ...(options.forOutgoing || options.editor ? ["data-mailflare-quote", "data-mailflare-signature"] : []), ...(options.editor ? EDITOR_ATTRIBUTES : [])],
+		ADD_ATTR: ["target", "loading", "referrerpolicy", ...(options.forOutgoing || options.editor ? ["data-kwings-mail-quote", "data-kwings-mail-signature"] : []), ...(options.editor ? EDITOR_ATTRIBUTES : [])],
 		FORBID_TAGS: ["script", "iframe", "object", "embed", "form", "input", "button", "select", "textarea", "link", "base", "meta", "audio", "video", "source", "template"],
 		FORBID_ATTR: ["is", "slot"],
 		ALLOW_DATA_ATTR: false,

@@ -79,8 +79,8 @@ const links = [
 // Drafts, Archived, Spam and Trash start tucked under "More...".
 const MORE_LINK_HREFS = ["/drafts", "/archived", "/spam", "/trash"];
 const MAX_VISIBLE_FOLDERS = 3;
-const MORE_OPEN_KEY = "mailflare:nav:more-open";
-const FOLDERS_OPEN_KEY = "mailflare:nav:folders-open";
+const MORE_OPEN_KEY = "kwings-mail:nav:more-open";
+const FOLDERS_OPEN_KEY = "kwings-mail:nav:folders-open";
 
 function NavToggle({ expanded, onClick, collapsedLabel, expandedLabel }: { expanded: boolean; onClick: () => void; collapsedLabel?: string; expandedLabel?: string }) {
   const { t } = useLanguage();
@@ -102,7 +102,7 @@ export function DashboardNav({ className }: { className?: string }) {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
   const [foldersOpen, setFoldersOpen] = useState(false);
-  const [foldersSectionOpen, toggleFoldersSection] = useSectionOpen("mailflare:nav:folders-section-open");
+  const [foldersSectionOpen, toggleFoldersSection] = useSectionOpen("kwings-mail:nav:folders-section-open");
   const { selectedMailbox, isLoading } = useSelectedMailbox();
   const { counts } = useMessageCounts(selectedMailbox?.id, !isLoading);
   const [folders, setFolders] = useState<CustomFolder[]>([]);
@@ -241,7 +241,7 @@ export function DashboardNav({ className }: { className?: string }) {
       {composeLink && !mobile && <NavItem labelClassName="font-medium" link={composeLink} />}
       {minimal && <hr className="mx-6 my-2 border-neutral-200/70" />}
       <ReorderableList
-        storageKey="mailflare:nav:layout"
+        storageKey="kwings-mail:nav:layout"
         enabled={!minimal}
         lists={[
           { id: "main", items: mainLinks.map((link) => ({ id: link.href!, node: <NavItem link={link} /> })) },
@@ -330,7 +330,7 @@ export function DashboardNav({ className }: { className?: string }) {
         </div>
       )}
       {(minimal || foldersSectionOpen) && <ReorderableList
-        storageKey="mailflare:nav:layout:folders"
+        storageKey="kwings-mail:nav:layout:folders"
         enabled={!minimal}
         lists={[{
           id: "folders",

@@ -54,7 +54,7 @@ export async function runSingleMessageAction(
 
   await throwIfDeleteSkipped(response, action);
   if (action === "read" || action === "unread") markMessagesReadInCaches([messageId], action === "read");
-  window.dispatchEvent(new Event("mailflare:messages-changed"));
+  window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 }
 
 export function openUnsubscribeUrl(url: string) {

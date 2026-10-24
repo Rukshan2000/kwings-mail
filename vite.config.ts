@@ -12,7 +12,7 @@ export default defineConfig({
 		// css-tree's ESM build loads ../data/patch.json through createRequire, which workerd cannot resolve; the dist bundle inlines it.
 		alias: [{ find: /^css-tree$/, replacement: "css-tree/dist/csstree.esm" }],
 	},
-	server: { allowedHosts: ["mailflare.local", "mail.dev"] },
+	server: { allowedHosts: ["kwings-mail.local", "mail.dev"] },
 	plugins: lazyPlugins(() => [
 		vinext({ images: { optimizer: imagesOptimizer() } }),
 		cloudflare({

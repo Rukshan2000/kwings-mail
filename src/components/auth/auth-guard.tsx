@@ -77,7 +77,7 @@ export function AuthGuard({ children, mode = "protected", requireMailbox, requir
 
 	useEffect(() => {
 		const refreshTimeZone = (event: StorageEvent) => {
-			if (event.key === "mailflare-user-time-zone") window.location.reload();
+			if (event.key === "kwings-mail-user-time-zone") window.location.reload();
 		};
 		window.addEventListener("storage", refreshTimeZone);
 		return () => window.removeEventListener("storage", refreshTimeZone);

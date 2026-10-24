@@ -21,7 +21,7 @@ import { canDropDrive, driveDropHandlers } from "./drive-drag";
 import type { DriveDropTarget } from "./drive-drag";
 
 const itemClass = "flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-sm text-neutral-700 outline-none data-[highlighted]:bg-neutral-100";
-const FOLDERS_OPEN_KEY = "mailflare-drive-folders-open";
+const FOLDERS_OPEN_KEY = "kwings-mail-drive-folders-open";
 
 type FolderNode = { id: string; name: string; parentId: string | null };
 

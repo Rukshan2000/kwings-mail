@@ -1,12 +1,12 @@
 # API and integrations
 
-Mailflare exposes APIs for domain, account, and mailbox management, and for sending email. Authentication and mailbox permissions still apply to these routes.
+Kwings Mail exposes APIs for domain, account, and mailbox management, and for sending email. Authentication and mailbox permissions still apply to these routes.
 
 ## Domain management
 
-Adding or removing a domain from Mailflare also updates Cloudflare Email Routing and sending resources. Each domain has a `sendingProvider` and a `receivingProvider` (`none`, `cloudflare`, `resend` or `ses`); see [Sending and receiving providers](providers.md).
+Adding or removing a domain from Kwings Mail also updates Cloudflare Email Routing and sending resources. Each domain has a `sendingProvider` and a `receivingProvider` (`none`, `cloudflare`, `resend` or `ses`); see [Sending and receiving providers](providers.md).
 
-| Mailflare route | Purpose |
+| Kwings Mail route | Purpose |
 | --- | --- |
 | `GET /api/domains` | List connected domains |
 | `POST /api/domains` | Connect a domain and configure Cloudflare |
@@ -22,13 +22,13 @@ Adding or removing a domain from Mailflare also updates Cloudflare Email Routing
 | `GET/PUT/DELETE /api/admin/resend-key` | The shared Resend API key (primary administrator) |
 | `GET/PUT/POST/DELETE /api/admin/aws` | The shared AWS credentials: `PUT` validates before saving and `POST` re-checks permissions (primary administrator) |
 
-The hostname must be the apex of a zone available to the configured Cloudflare credentials, or a subdomain of that zone. Creating a mailbox also creates the Cloudflare Email Routing rule that delivers its address to the `mailflare` Worker.
+The hostname must be the apex of a zone available to the configured Cloudflare credentials, or a subdomain of that zone. Creating a mailbox also creates the Cloudflare Email Routing rule that delivers its address to the `kwings-mail` Worker.
 
 ### Domain management over the API
 
 The same operations are available to scripts through admin API keys with the `domains` scope, using `Authorization: Bearer <key>`. Create these keys in Admin > API keys. The owner must retain the admin role; personal mail keys from Settings cannot grant domain access.
 
-| Mailflare route | Purpose |
+| Kwings Mail route | Purpose |
 | --- | --- |
 | `GET /api/v1/domains` | List connected domains with their DNS status |
 | `POST /api/v1/domains` | Connect a domain and configure Cloudflare (`{ hostname, enableRouting?, enableSending?, replaceMxRecords?, receivingProvider?, sendingProvider? }`; `receivingProvider` defaults to `cloudflare`, and with another value Email Routing is not enabled. `sendingProvider` defaults to `cloudflare` (or `none` when `enableSending` is `false`), and the Cloudflare sending subdomain is only created for `cloudflare`) |
@@ -37,7 +37,7 @@ The same operations are available to scripts through admin API keys with the `do
 | `GET /api/v1/domains/[id]/dns` | View its routing, sending and authentication DNS status |
 | `POST /api/v1/domains/[id]/dns/setup` | Create a missing record (`{ record: "mx" \| "spf" \| "dkim" \| "dmarc" }`) |
 
-`GET /api/v1/domains` returns `{ domains, dns }`, where `dns[id].auth` reports `ok` / `missing` / `unknown` for MX, SPF, DKIM and DMARC. `GET /api/v1/domains/[id]/dns` returns the full audit, including the names queried and the values found. The `setup` route provisions MX/SPF through Email Routing, DKIM through the sending subdomain, and a `v=DMARC1; p=none` TXT for DMARC; on a self-hosted install where DNS is managed manually it returns an error, since Mailflare cannot write the zone.
+`GET /api/v1/domains` returns `{ domains, dns }`, where `dns[id].auth` reports `ok` / `missing` / `unknown` for MX, SPF, DKIM and DMARC. `GET /api/v1/domains/[id]/dns` returns the full audit, including the names queried and the values found. The `setup` route provisions MX/SPF through Email Routing, DKIM through the sending subdomain, and a `v=DMARC1; p=none` TXT for DMARC; on a self-hosted install where DNS is managed manually it returns an error, since Kwings Mail cannot write the zone.
 
 ### Inbound provider endpoints
 
@@ -45,7 +45,7 @@ Resend and Amazon SES deliver mail by calling the app, so these routes are publi
 
 | Route | Authenticated by |
 | --- | --- |
-| `POST /api/inbound/resend` | The Svix signature of the webhook secret Resend returned when Mailflare created the webhook |
+| `POST /api/inbound/resend` | The Svix signature of the webhook secret Resend returned when Kwings Mail created the webhook |
 | `POST /api/inbound/ses?token=…` | The secret token in the subscription URL, the SNS topic ARN, and reading the message from the account's own S3 bucket |
 | `POST /api/inbound` | The HMAC from the Cloudflare relay Worker, used by self-hosted installs ([self-hosting](self-hosting.md)) |
 
@@ -55,9 +55,9 @@ Resend and Amazon SES deliver mail by calling the app, so these routes are publi
 
 Each user has a personal calendar at **Calendar** in the dashboard. Events have a title, description, location, attendees, color, time zone and an optional repeat (`daily`, `weekly`, `monthly` or `weekdays`, with an end date and skipped occurrences). Changing or deleting a repeating event affects the whole series unless you choose a starting occurrence.
 
-When you add attendees and choose a sending mailbox, Mailflare emails each attendee an invitation with a calendar (`.ics`) file from that mailbox, and sends updates and cancellations the same way. Events created through MCP tools or the assistant record attendees but do not send invitations.
+When you add attendees and choose a sending mailbox, Kwings Mail emails each attendee an invitation with a calendar (`.ics`) file from that mailbox, and sends updates and cancellations the same way. Events created through MCP tools or the assistant record attendees but do not send invitations.
 
-| Mailflare route | Purpose |
+| Kwings Mail route | Purpose |
 | --- | --- |
 | `GET /api/calendar/events?start=&end=` | List events in an ISO 8601 range (default: the next 31 days). Repeating events are returned once, with their rule |
 | `POST /api/calendar/events` | Create an event (`{ title, startsAt, endsAt, description?, location?, attendees?, color?, repeat?, repeatDays?, timeZone?, mailboxId?, from? }`) |
@@ -70,11 +70,11 @@ These routes accept the dashboard session or an API key (`Authorization: Bearer 
 
 Open **Booking** to create booking events: a name, link (slug), duration, location, weekdays, one or more daily time ranges, a time zone and an on/off switch. Two disabled templates (15 and 30 minute meetings) are offered to start from. Each user gets a booking username, derived from their email and unique across the instance; an administrator can change it. Booking events are served at `/book/<username>` (the list) and `/book/<username>/<event>` (one event), with no login.
 
-A guest picks a slot, enters a name, email, optional extra guest emails and notes, and the booking is added to the host's calendar with the guest as attendee. Slots come from the host's availability: every 15 minutes inside the allowed ranges, up to 60 days ahead, at least an hour from now, and only where the host's calendar is free, repeating events included. The booking is inserted in one statement that re-checks for conflicts, so two guests cannot take the same slot. Mailflare does not email the guest a confirmation; the booking page confirms on screen.
+A guest picks a slot, enters a name, email, optional extra guest emails and notes, and the booking is added to the host's calendar with the guest as attendee. Slots come from the host's availability: every 15 minutes inside the allowed ranges, up to 60 days ahead, at least an hour from now, and only where the host's calendar is free, repeating events included. The booking is inserted in one statement that re-checks for conflicts, so two guests cannot take the same slot. Kwings Mail does not email the guest a confirmation; the booking page confirms on screen.
 
 On a Team license an administrator can add other users as hosts of a booking event. The booking is created on every host's calendar, and a slot is offered only when all hosts are free.
 
-| Mailflare route | Purpose |
+| Kwings Mail route | Purpose |
 | --- | --- |
 | `GET /api/booking`, `POST /api/booking` | List or create the signed-in user's booking events |
 | `PATCH /api/booking/[eventId]`, `DELETE /api/booking/[eventId]` | Update or delete one |
@@ -91,7 +91,7 @@ The `storage` scope reports and tests object storage: `GET /api/v1/storage` retu
 
 Admin API keys cannot read or send mail. Enable **Allow MCP access** when creating an admin key to use its selected `domains`, `accounts`, `mailboxes`, and `storage` permissions through `/mcp`. The `manage_domains`, `manage_accounts`, `manage_mailboxes`, and `manage_storage` (`status`, `test`) tools expose the corresponding management actions below. Admin MCP keys do not expose mail tools. Use Settings > API keys for mail and mail MCP access.
 
-| Scope | Mailflare route | Purpose |
+| Scope | Kwings Mail route | Purpose |
 | --- | --- | --- |
 | `accounts` | `GET /api/v1/accounts` | List managed accounts |
 | `accounts` | `POST /api/v1/accounts` | Create an account and its mailbox (`{ username, domainId, password, role?, useAllDomains?, aliases? }`) |
@@ -167,7 +167,7 @@ Send email through `POST /api/v1/send`. `to`, `cc` and `bcc` accept either a com
 }
 ```
 
-To send a reply that threads correctly in the recipient's client, pass the parent's Message-ID as `inReplyTo` and its chain as `references` (a header string or an array). Mailflare writes the `In-Reply-To` and `References` headers, files the sent copy in the same conversation, and stores `threadId`, `inReplyTo` and `references` on every message.
+To send a reply that threads correctly in the recipient's client, pass the parent's Message-ID as `inReplyTo` and its chain as `references` (a header string or an array). Kwings Mail writes the `In-Reply-To` and `References` headers, files the sent copy in the same conversation, and stores `threadId`, `inReplyTo` and `references` on every message.
 
 ```json
 {
@@ -186,17 +186,17 @@ To send a reply that threads correctly in the recipient's client, pass the paren
 
 Each user can also choose **Settings > Inbox > Trash and Spam clean-up** to delete Trash and Spam automatically after a number of days (`GET`/`PATCH /api/settings/trash-retention` with `{ days: number | null }`, 1 to 365, `null` for never). It applies to messages in mailboxes the user owns. `messages.trashed_at` records when a message entered either folder; database triggers keep it current, and the scheduled maintenance run deletes expired messages in batches of 200, with `source: "retention"` in the audit entry.
 
-Messages composed in Mailflare are sent as HTML with a plain-text alternative derived from it. Quoted or forwarded content is wrapped in `<div class="mailflare-quote" data-mailflare-quote="1">` so the reader can fold it. `POST /api/drafts` accepts `forwardOfMessageId`, which copies that message's attachments onto the new draft; `DELETE /api/drafts/{id}/attachments/{attachmentId}` removes one, and `POST /api/send` with `draftId` sends the draft's stored files along with any uploaded in the request.
+Messages composed in Kwings Mail are sent as HTML with a plain-text alternative derived from it. Quoted or forwarded content is wrapped in `<div class="kwings-mail-quote" data-kwings-mail-quote="1">` so the reader can fold it. `POST /api/drafts` accepts `forwardOfMessageId`, which copies that message's attachments onto the new draft; `DELETE /api/drafts/{id}/attachments/{attachmentId}` removes one, and `POST /api/send` with `draftId` sends the draft's stored files along with any uploaded in the request.
 
 The dashboard composer accepts up to 10 attachments. An administrator sets the outgoing per-file and combined limit from 1 to 25 MB on **General** (`/general`); the default is 25 MB. Attachment metadata is stored in D1 and file content is stored in R2. Normal message downloads require access to the mailbox containing the message.
 The limits below apply to domains that send through Cloudflare. Resend and Amazon SES take attachments directly, within the same administrator limit. Cloudflare Email Sending limits the entire encoded message, including attachments, to 5 MiB for general recipients, or 25 MiB for verified destination addresses. To stay under the general limit, files over 3 MB and smaller files that would exceed the message budget are sent as R2 download links. The recipient can download them for 30 days; anyone with the link can access the file during that time. The outgoing cap still applies to those files. Cloudflare also limits recipient count to 50, subject length to 998 characters, and headers to 16 KB.
-Incoming mail that exceeds the attachment count or 25 MB decoded attachment limit is rejected during delivery, so the sender's mail provider can report a delivery failure. Cloudflare Email Routing also limits the entire raw message to 25 MiB, including MIME encoding, and may reject it before Mailflare runs.
+Incoming mail that exceeds the attachment count or 25 MB decoded attachment limit is rejected during delivery, so the sender's mail provider can report a delivery failure. Cloudflare Email Routing also limits the entire raw message to 25 MiB, including MIME encoding, and may reject it before Kwings Mail runs.
 
 ## JMAP
 
-Mailflare serves [JMAP](https://jmap.io) (RFC 8620 core and RFC 8621 mail, plus submission) so external mail apps can read and send mail. Discovery is at `/.well-known/jmap`, which redirects to `/jmap/session`. Authenticate with an API key that has the `jmap` scope, either as `Authorization: Bearer <key>` or as the password of HTTP Basic auth (the username is ignored). Settings > Account > App passwords mints such a key.
+Kwings Mail serves [JMAP](https://jmap.io) (RFC 8620 core and RFC 8621 mail, plus submission) so external mail apps can read and send mail. Discovery is at `/.well-known/jmap`, which redirects to `/jmap/session`. Authenticate with an API key that has the `jmap` scope, either as `Authorization: Bearer <key>` or as the password of HTTP Basic auth (the username is ignored). Settings > Account > App passwords mints such a key.
 
-The account id is the user id. Each Mailflare mailbox appears as a top-level JMAP Mailbox with system children (`inbox`, `drafts`, `sent`, `archive`, `junk`, `trash`) and one child per user folder; a message belongs to exactly one of them. Supported methods: `Mailbox/get|query|set` (folders only), `Thread/get`, `Email/get|query|set|import`, `SearchSnippet/get`, `Identity/get`, `EmailSubmission/set`, and `Core/echo`. `Email/copy` and `Email/parse` are not implemented. `*/changes` return `cannotCalculateChanges`, so clients re-query on a state change; `/jmap/eventsource` pushes state changes by polling. `Email/set` creates drafts, updates `$seen` and `$flagged`, moves between mailboxes, and destroys (to Trash first, then permanently). `EmailSubmission/set` sends a draft and reports it destroyed, since the sent copy is a new message. Blob download and upload follow the Session's `downloadUrl` and `uploadUrl`.
+The account id is the user id. Each Kwings Mail mailbox appears as a top-level JMAP Mailbox with system children (`inbox`, `drafts`, `sent`, `archive`, `junk`, `trash`) and one child per user folder; a message belongs to exactly one of them. Supported methods: `Mailbox/get|query|set` (folders only), `Thread/get`, `Email/get|query|set|import`, `SearchSnippet/get`, `Identity/get`, `EmailSubmission/set`, and `Core/echo`. `Email/copy` and `Email/parse` are not implemented. `*/changes` return `cannotCalculateChanges`, so clients re-query on a state change; `/jmap/eventsource` pushes state changes by polling. `Email/set` creates drafts, updates `$seen` and `$flagged`, moves between mailboxes, and destroys (to Trash first, then permanently). `EmailSubmission/set` sends a draft and reports it destroyed, since the sent copy is a new message. Blob download and upload follow the Session's `downloadUrl` and `uploadUrl`.
 
 `Email/import` takes a `message/rfc822` blob that was uploaded first and stores it as a draft, which is how clients that compose MIME themselves send: upload, import, then `EmailSubmission/set`. Each entry takes `blobId`, `mailboxIds`, and optionally `keywords` and `receivedAt`. **The target must be exactly one Drafts mailbox** — importing into Inbox or a folder is rejected with `invalidProperties` on `mailboxIds`, because delivered mail belongs to the inbound pipeline that does threading and spam scoring. `$seen` and `$flagged` are stored, `$draft` is implied, and other keywords are ignored. `receivedAt` sets the message date, falling back to the `Date` header and then to now. The uploaded bytes are kept verbatim, so downloading the new message's `blobId` returns exactly what was uploaded rather than a reconstruction, and the `Message-ID` header is stored so the client can find its own draft again. Per-message failures come back in `notCreated` as `blobNotFound`, `invalidEmail`, `invalidProperties`, `forbidden` (the `From` address is not one the key may send from) or `tooLarge`.
 
@@ -226,6 +226,6 @@ Terms combine with AND. Admins can check or rebuild the index with `GET` / `POST
 
 ## Real-time updates
 
-Mailflare uses a Durable Object WebSocket hub to notify connected users after an inbound message is stored. Mailbox owners, the domain administrator, and delegated users receive events for mailboxes they can access.
+Kwings Mail uses a Durable Object WebSocket hub to notify connected users after an inbound message is stored. Mailbox owners, the domain administrator, and delegated users receive events for mailboxes they can access.
 
 The `REALTIME` binding and its migration are declared in `wrangler.jsonc`. When a WebSocket is temporarily unavailable, the app retries the connection and uses a slower refresh until it recovers.

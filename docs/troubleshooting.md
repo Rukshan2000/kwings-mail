@@ -2,7 +2,7 @@
 
 ## Cloudflare error 9109: Invalid access token
 
-The Deploy to Cloudflare flow can deploy the Worker, but its deployment token is not exposed to Mailflare at runtime. Create a separate Cloudflare API token and set it as `CF_TOKEN`.
+The Deploy to Cloudflare flow can deploy the Worker, but its deployment token is not exposed to Kwings Mail at runtime. Create a separate Cloudflare API token and set it as `CF_TOKEN`.
 
 Verify the token:
 
@@ -26,11 +26,11 @@ Update the token so it can read the zone and manage its DNS, Email Routing setti
 
 ## Cloudflare error 2008 for existing MX records
 
-Cloudflare Email Routing cannot be enabled while another mail provider's MX records are present. Mailflare shows a confirmation before replacing them. Continuing deletes the existing MX records and points incoming mail to Cloudflare Email Routing, so the previous provider will stop receiving mail. The `CF_TOKEN` needs **DNS Edit** permission for this action.
+Cloudflare Email Routing cannot be enabled while another mail provider's MX records are present. Kwings Mail shows a confirmation before replacing them. Continuing deletes the existing MX records and points incoming mail to Cloudflare Email Routing, so the previous provider will stop receiving mail. The `CF_TOKEN` needs **DNS Edit** permission for this action.
 
 ## Resend or SES domain stays "not verified"
 
-The status is the provider's own, not Mailflare's. After the DNS records are added it can stay pending for several minutes (Resend and SES check public DNS, not Cloudflare's dashboard), and **Check status** re-asks the provider without creating anything. If one record stays stuck, look at the per-record statuses listed under the domain row, then check for a duplicate or older TXT record on the same name, a CNAME that is proxied through Cloudflare (it must be DNS only), or a record created at the wrong name (`send.example.com.example.com`). `dig TXT resend._domainkey.example.com +short` shows what the public sees.
+The status is the provider's own, not Kwings Mail's. After the DNS records are added it can stay pending for several minutes (Resend and SES check public DNS, not Cloudflare's dashboard), and **Check status** re-asks the provider without creating anything. If one record stays stuck, look at the per-record statuses listed under the domain row, then check for a duplicate or older TXT record on the same name, a CNAME that is proxied through Cloudflare (it must be DNS only), or a record created at the wrong name (`send.example.com.example.com`). `dig TXT resend._domainkey.example.com +short` shows what the public sees.
 
 ## "This domain has MX records for another mail service"
 
@@ -73,8 +73,8 @@ Also confirm that automatic backups are enabled under **Admin → Backups** and 
 
 Confirm that:
 
-- The deployed Worker is named `mailflare`.
-- `services[].service` in `wrangler.jsonc` is also `mailflare`.
+- The deployed Worker is named `kwings-mail`.
+- `services[].service` in `wrangler.jsonc` is also `kwings-mail`.
 - Email Routing is enabled for the domain in Cloudflare.
 - The mailbox has an Email Routing rule pointing to the Worker.
 - If the domain receives through Resend or Amazon SES instead, its receiving checklist is all green, the MX record points at that provider, and `APP_URL` is a public HTTPS address.

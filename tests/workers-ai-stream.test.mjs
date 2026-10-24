@@ -8,7 +8,7 @@ import { streamText } from "ai";
 import { z } from "zod";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const bundleDirectory = mkdtempSync(join(root, "node_modules", "mailflare-workers-ai-stream-bundle-"));
+const bundleDirectory = mkdtempSync(join(root, "node_modules", "kwings-mail-workers-ai-stream-bundle-"));
 after(() => rmSync(bundleDirectory, { recursive: true, force: true }));
 
 await build({

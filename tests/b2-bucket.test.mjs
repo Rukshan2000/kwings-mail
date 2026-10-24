@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const outDir = mkdtempSync(join(tmpdir(), "mailflare-b2-"));
+const outDir = mkdtempSync(join(tmpdir(), "kwings-mail-b2-"));
 after(() => rmSync(outDir, { recursive: true, force: true }));
 
 async function bundle(entry, outfile) {

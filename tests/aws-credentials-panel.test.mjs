@@ -109,7 +109,7 @@ const REFUSAL = {
 	error: "These credentials work but have no SES permissions. Attach the policy shown below.",
 	report: {
 		accountId: "123456789012",
-		arn: "arn:aws:iam::123456789012:user/mailflare",
+		arn: "arn:aws:iam::123456789012:user/kwings-mail",
 		region: "us-east-1",
 		sending: false,
 		productionAccess: null,

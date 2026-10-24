@@ -4,7 +4,7 @@ import { listAccessibleMailboxes } from "@/lib/mailboxes/access";
 import { getMailboxDomainAddresses } from "@/lib/mailboxes/domain-addresses";
 import type { AccessibleMailbox, JmapContext } from "./types";
 
-/** Every Mailflare mailbox the key's user can read, in a JMAP-shaped record. */
+/** Every Kwings Mail mailbox the key's user can read, in a JMAP-shaped record. */
 export async function listJmapMailboxes(ctx: JmapContext): Promise<AccessibleMailbox[]> {
 	const rows = await listAccessibleMailboxes(ctx.db, ctx.auth.user);
 	return rows.filter((row) => !ctx.auth.mailboxIds || ctx.auth.mailboxIds.includes(row.id)).map((row) => ({

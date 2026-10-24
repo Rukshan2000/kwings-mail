@@ -26,7 +26,7 @@ async function main() {
 	const dev = process.env.NODE_ENV !== "production";
 	const runtime = createNodeRuntime();
 	const { env } = runtime;
-	globalThis.__mailflareNodeEnv = env;
+	globalThis.__kwingsMailNodeEnv = env;
 
 	const migrated = await applyMigrations(runtime.database, resolve(process.env.MIGRATIONS_DIR ?? join(process.cwd(), "drizzle", "migrations")));
 	if (migrated.length) console.log(`Applied ${migrated.length} migration(s): ${migrated.join(", ")}`);
@@ -72,7 +72,7 @@ async function main() {
 	});
 
 	server.listen(port, host, () => {
-		console.log(`Mailflare listening on http://${host}:${port} (data in ${runtime.dataDir})`);
+		console.log(`Kwings Mail listening on http://${host}:${port} (data in ${runtime.dataDir})`);
 	});
 
 	const smtpPort = Number(process.env.SMTP_INBOUND_PORT ?? 25);
@@ -100,6 +100,6 @@ async function main() {
 }
 
 main().catch((error) => {
-	console.error("Mailflare failed to start", error);
+	console.error("Kwings Mail failed to start", error);
 	process.exit(1);
 });

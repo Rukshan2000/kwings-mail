@@ -1,8 +1,8 @@
-# Mailflare self-hosted image: Next.js app, SMTP listener, job queues and
+# Kwings Mail self-hosted image: Next.js app, SMTP listener, job queues and
 # backups in one Node process. Data lives in /data (mount a volume).
 FROM node:22-bookworm-slim AS base
 WORKDIR /app
-ENV NEXT_TELEMETRY_DISABLED=1 MAILFLARE_RUNTIME=node
+ENV NEXT_TELEMETRY_DISABLED=1 KWINGS_MAIL_RUNTIME=node
 
 # better-sqlite3 ships prebuilt binaries for this image; the toolchain is only
 # a fallback for platforms without one.

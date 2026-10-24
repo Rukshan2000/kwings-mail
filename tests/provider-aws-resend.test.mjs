@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const outDir = mkdtempSync(join(tmpdir(), "mailflare-providers-"));
+const outDir = mkdtempSync(join(tmpdir(), "kwings-mail-providers-"));
 after(() => rmSync(outDir, { recursive: true, force: true }));
 
 async function bundle(entry, outfile) {
@@ -169,7 +169,7 @@ test("validation reports each missing permission instead of failing", async () =
 test("SES calls are signed and shaped for the v1 receipt-rule API", async () => {
 	const mock = mockAws(() => ({ body: "<R/>" }));
 	try {
-		await sesLib.upsertReceiptRule(creds, { ruleSet: "rs", name: "mailflare-example-com", recipient: "example.com", bucket: "bkt", prefix: "inbound/", topicArn: "arn:aws:sns:us-east-1:1:t" });
+		await sesLib.upsertReceiptRule(creds, { ruleSet: "rs", name: "kwings-mail-example-com", recipient: "example.com", bucket: "bkt", prefix: "inbound/", topicArn: "arn:aws:sns:us-east-1:1:t" });
 		const call = mock.calls[0];
 		assert.equal(call.url.host, "email.us-east-1.amazonaws.com");
 		assert.equal(call.action, "CreateReceiptRule");

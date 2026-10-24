@@ -16,7 +16,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
  * adds a table, so the test bundles the constants with the esbuild already used
  * by other tests and replays the bundle exactly like `push-devices-migration.test.mjs`.
  */
-const outDir = mkdtempSync(join(tmpdir(), "mailflare-backup-table-list-test-"));
+const outDir = mkdtempSync(join(tmpdir(), "kwings-mail-backup-table-list-test-"));
 after(() => rmSync(outDir, { recursive: true, force: true }));
 
 await build({

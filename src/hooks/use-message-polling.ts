@@ -37,7 +37,7 @@ export function useMessagePolling(): MessageRealtimeState {
 		let stopped = false;
 
 		function dispatchMessagesChanged() {
-			window.dispatchEvent(new CustomEvent("mailflare:messages-changed", { detail: { realtime: true } }));
+			window.dispatchEvent(new CustomEvent("kwings-mail:messages-changed", { detail: { realtime: true } }));
 		}
 
 		function clearConnectionTimers() {
@@ -77,7 +77,7 @@ export function useMessagePolling(): MessageRealtimeState {
 					return;
 				}
 				if (parsed.type === "agent_draft" && parsed.draftId && parsed.mailboxId) {
-					window.dispatchEvent(new CustomEvent("mailflare:agent-draft", { detail: parsed }));
+					window.dispatchEvent(new CustomEvent("kwings-mail:agent-draft", { detail: parsed }));
 					dispatchMessagesChanged();
 					if (fromSocket) channel?.postMessage({ type: "notification", payload } satisfies RealtimeChannelMessage);
 					return;
@@ -137,7 +137,7 @@ export function useMessagePolling(): MessageRealtimeState {
 				return;
 			}
 			lockAbort = new AbortController();
-			void navigator.locks.request("mailflare:realtime", { signal: lockAbort.signal }, async () => {
+			void navigator.locks.request("kwings-mail:realtime", { signal: lockAbort.signal }, async () => {
 				if (stopped || !getClientSessionToken()) return;
 				await new Promise<void>((resolve) => {
 					releaseLeader = resolve;
@@ -195,13 +195,13 @@ export function useMessagePolling(): MessageRealtimeState {
 		}
 
 		if (typeof BroadcastChannel !== "undefined") {
-			channel = new BroadcastChannel("mailflare:realtime");
+			channel = new BroadcastChannel("kwings-mail:realtime");
 			channel.onmessage = onChannelMessage;
 			channel.postMessage({ type: "status_request" } satisfies RealtimeChannelMessage);
 		}
 		window.addEventListener(AUTH_SESSION_CHANGED_EVENT, restartForSessionChange);
 		window.addEventListener("storage", onStorageChange);
-		window.addEventListener("mailflare:messages-changed", onLocalMessagesChanged);
+		window.addEventListener("kwings-mail:messages-changed", onLocalMessagesChanged);
 		document.addEventListener("visibilitychange", onVisibilityChange);
 		window.addEventListener("focus", onVisibilityChange);
 		startFallbackRefresh();
@@ -211,7 +211,7 @@ export function useMessagePolling(): MessageRealtimeState {
 			stopped = true;
 			window.removeEventListener(AUTH_SESSION_CHANGED_EVENT, restartForSessionChange);
 			window.removeEventListener("storage", onStorageChange);
-			window.removeEventListener("mailflare:messages-changed", onLocalMessagesChanged);
+			window.removeEventListener("kwings-mail:messages-changed", onLocalMessagesChanged);
 			document.removeEventListener("visibilitychange", onVisibilityChange);
 			window.removeEventListener("focus", onVisibilityChange);
 			if (leader) channel?.postMessage({ type: "status", connected: false } satisfies RealtimeChannelMessage);

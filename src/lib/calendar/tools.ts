@@ -40,7 +40,7 @@ export const calendarToolDescriptions: Record<CalendarToolName, string> = {
 	update_events: "Update up to 20 owned event series by series ID. Changes apply to the whole series and save immediately; invitations are not sent.",
 	delete_events: "Delete up to 20 owned event series by series ID. This saves immediately and does not send cancellations.",
 	find_free_time: "Find available slots using the user's events in an ISO 8601 time range, up to 90 days. Returns UTC instants.",
-	get_calendars: "List the calendars available here. Mailflare currently has one personal calendar per user.",
+	get_calendars: "List the calendars available here. Kwings Mail currently has one personal calendar per user.",
 };
 
 export const CALENDAR_TOOL_NAMES = Object.keys(calendarToolSchemas) as CalendarToolName[];

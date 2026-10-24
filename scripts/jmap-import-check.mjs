@@ -67,7 +67,7 @@ async function callOne(key, name, args) {
 
 /** A multipart/mixed message with one text part and one attachment. */
 function buildMime({ from, to, subject, messageId, text, attachmentName, attachmentBody }) {
-	const boundary = "mailflare-import-check-boundary";
+	const boundary = "kwings-mail-import-check-boundary";
 	return [
 		`From: ${from}`,
 		`To: ${to}`,

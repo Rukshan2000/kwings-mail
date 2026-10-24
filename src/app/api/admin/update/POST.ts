@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     // assume it's already passed
 		// const status = await getUpdateStatus(authorization.env);
 		// if (!status.available) {
-		// 	return NextResponse.json({ error: "Mailflare is already up to date", ...status }, { status: 409 });
+		// 	return NextResponse.json({ error: "Kwings Mail is already up to date", ...status }, { status: 409 });
 		// }
 
 		const dispatch = await dispatchUpdateWorkflow();

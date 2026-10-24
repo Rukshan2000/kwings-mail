@@ -15,7 +15,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
  * rather than loaded directly. Nothing here touches a Workers binding: the
  * import helpers are pure and the query layer only builds SQL.
  */
-const outDir = mkdtempSync(join(tmpdir(), "mailflare-jmap-test-"));
+const outDir = mkdtempSync(join(tmpdir(), "kwings-mail-jmap-test-"));
 after(() => rmSync(outDir, { recursive: true, force: true }));
 
 await build({
@@ -60,7 +60,7 @@ test("JMAP Id[Boolean] sets are read as maps and as plain lists", () => {
 	assert.deepEqual(idSetToList([1, "a"]), ["a"]);
 });
 
-test("only the keywords Mailflare stores as columns are mapped", () => {
+test("only the keywords Kwings Mail stores as columns are mapped", () => {
 	assert.deepEqual(importFlags({ $seen: true, $draft: true }), { read: true, starred: false });
 	assert.deepEqual(importFlags({ $flagged: true }), { read: false, starred: true });
 	assert.deepEqual(importFlags(["$draft", "$seen", "$flagged"]), { read: true, starred: true });
@@ -137,7 +137,7 @@ test("the one-element form asks whether the header is present at all", () => {
 	assert.deepEqual(renderFilter({ header: ["Message-ID"] }).params, []);
 });
 
-test("a header Mailflare cannot answer is an unsupportedFilter error, not a match-all (RFC 8620 §5.5)", () => {
+test("a header Kwings Mail cannot answer is an unsupportedFilter error, not a match-all (RFC 8620 §5.5)", () => {
 	for (const header of [["X-Unknown"], ["X-Mailer", "Flectar"], ["Reply-To", "someone@example.com"]]) {
 		assert.throws(() => filterToSql({ header }, writable), (error) => error.type === "unsupportedFilter", JSON.stringify(header));
 	}

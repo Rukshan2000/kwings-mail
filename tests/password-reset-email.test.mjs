@@ -6,7 +6,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const bundleDirectory = mkdtempSync(join(root, "node_modules", "mailflare-reset-bundle-"));
+const bundleDirectory = mkdtempSync(join(root, "node_modules", "kwings-mail-reset-bundle-"));
 await build({
 	stdin: {
 		contents: `

@@ -9,7 +9,7 @@ import { attachmentAction, bulk } from "./drive-bulk-actions";
 import { DRIVE_REFRESH_EVENT } from "./drive-events";
 
 /** Marks a drag as Drive items being moved, so drop targets ignore files dragged in from the desktop. */
-export const DRIVE_DRAG_TYPE = "application/x-mailflare-drive";
+export const DRIVE_DRAG_TYPE = "application/x-kwings-mail-drive";
 
 type DraggedItem = Pick<DriveItemDto, "id" | "kind" | "role"> & { attachment: boolean; trashed: boolean };
 /**

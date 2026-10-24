@@ -15,7 +15,7 @@ import { inboundAttachmentLimitReasonFromRaw } from "./src/lib/email/inbound-att
 import { hasValidSessionMutationOrigin } from "./src/lib/auth/origin";
 import {
 	getAccountForwardingDestination,
-	MAILFLARE_FORWARDED_HEADER,
+	KWINGS_MAIL_FORWARDED_HEADER,
 } from "./src/lib/email/account-forwarding";
 import { runScheduledDatabaseBackup } from "./src/lib/backups/runner";
 import { processAgentDraftJob } from "./src/lib/agent/jobs/utils";
@@ -44,8 +44,8 @@ export default {
 			}
 
 			const hub = env.REALTIME.getByName(user.id);
-			const hubRequest = new Request("https://mailflare-realtime/connect", request);
-			hubRequest.headers.set("X-Mailflare-Realtime-User", user.id);
+			const hubRequest = new Request("https://kwings-mail-realtime/connect", request);
+			hubRequest.headers.set("X-Kwings-Mail-Realtime-User", user.id);
 			return hub.fetch(hubRequest);
 		}
 
@@ -81,7 +81,7 @@ export default {
 				if (forwarded && !decision.keepCopy) return;
 			}
 
-			if (message.headers.get(MAILFLARE_FORWARDED_HEADER) !== "1") {
+			if (message.headers.get(KWINGS_MAIL_FORWARDED_HEADER) !== "1") {
 				const forwardingDestination = await getAccountForwardingDestination(env, message.to);
 				if (forwardingDestination) {
 					await forwardMessage(message, forwardingDestination);

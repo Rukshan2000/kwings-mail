@@ -30,7 +30,7 @@ export function ImportMessages({ destination, sourceLabel }: ImportMessagesProps
 		try {
 			const nextResult = await importMessageFiles(selectedMailbox.id, files, destination);
 			setResult(nextResult);
-			window.dispatchEvent(new Event("mailflare:messages-changed"));
+			window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 		} catch (err) {
 			setError(err instanceof Error ? err.message : t("import.failed"));
 		} finally {

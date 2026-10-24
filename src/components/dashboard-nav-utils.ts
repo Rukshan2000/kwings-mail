@@ -14,7 +14,7 @@ async function moveMessages(payload: { messageIds: string[]; action: BulkMessage
 	});
 
 	if (!response.ok) throw new Error("Unable to move messages");
-	window.dispatchEvent(new Event("mailflare:messages-changed"));
+	window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 }
 
 export function moveMessagesToSystemFolder(messageIds: string[], action: "archive" | "spam" | "trash") {

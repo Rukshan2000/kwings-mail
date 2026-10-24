@@ -1,6 +1,6 @@
 import type { B2Config, StorageStatus } from "@/lib/storage/b2-types";
 
-type B2Env = Partial<Pick<CloudflareEnv, "B2_KEY_ID" | "B2_APPLICATION_KEY" | "B2_BUCKET" | "B2_ENDPOINT" | "S3_BUCKET" | "S3_REGION" | "S3_ACCESS_KEY_ID" | "S3_SECRET_ACCESS_KEY" | "MAILFLARE_RUNTIME">> &
+type B2Env = Partial<Pick<CloudflareEnv, "B2_KEY_ID" | "B2_APPLICATION_KEY" | "B2_BUCKET" | "B2_ENDPOINT" | "S3_BUCKET" | "S3_REGION" | "S3_ACCESS_KEY_ID" | "S3_SECRET_ACCESS_KEY" | "KWINGS_MAIL_RUNTIME">> &
 	Partial<Record<"AWS_ACCESS_KEY_ID" | "AWS_SECRET_ACCESS_KEY" | "AWS_REGION" | "AWS_DEFAULT_REGION", string>>;
 
 const ENDPOINT_PATTERN = /^s3\.([a-z0-9-]+)\.backblazeb2\.com$/;
@@ -55,7 +55,7 @@ export function getObjectStorageConfig(env: B2Env): (B2Config & { provider: "bac
 export function getStorageStatus(env: B2Env): StorageStatus {
 	const configured = getObjectStorageConfig(env);
 	if (configured) return { provider: configured.provider, configured: true, bucket: configured.bucket, endpoint: configured.endpoint };
-	return { provider: env.MAILFLARE_RUNTIME === "node" ? "files" : "r2", configured: true, bucket: null, endpoint: null };
+	return { provider: env.KWINGS_MAIL_RUNTIME === "node" ? "files" : "r2", configured: true, bucket: null, endpoint: null };
 }
 
 /** Names the variables that are set without exposing values, so a half-finished setup can be diagnosed. */

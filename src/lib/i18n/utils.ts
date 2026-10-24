@@ -3,7 +3,7 @@ import { DEFAULT_LOCALE, locales } from "./locales";
 import type { Locale, Messages, PluralKey, TranslationKey } from "./types";
 
 export { DEFAULT_LOCALE } from "./locales";
-export const LOCALE_COOKIE = "mailflare-locale";
+export const LOCALE_COOKIE = "kwings-mail-locale";
 export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 export function resolveLocale(value: unknown): Locale {

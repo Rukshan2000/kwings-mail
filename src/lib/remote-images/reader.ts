@@ -124,7 +124,7 @@ export function prepareReaderEmailHtml(source: string, options: { reader: true; 
 	for (const name of imageVariables) {
 		for (const value of definitions.get(name) ?? []) variableReferences(value, imageVariables);
 	}
-	const proxyNames = new Map([...imageVariables].map((name, index) => [name, "--mailflare-image-" + prepared.rootTag + "-" + index]));
+	const proxyNames = new Map([...imageVariables].map((name, index) => [name, "--kwings-mail-image-" + prepared.rootTag + "-" + index]));
 	for (const { element, inline, ast } of cssEntries) {
 		try {
 			if (inline) element.setAttribute("style", proxyCss(ast, proxyNames));

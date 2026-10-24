@@ -170,7 +170,7 @@ export async function fetchRemoteImage(value: string, options: RemoteImageFetchO
 			try {
 				response = await fetchImpl(current.href, {
 					method: "GET",
-					headers: { Accept: "image/png,image/jpeg,image/gif,image/webp,image/avif", "User-Agent": "Mailflare-Remote-Images/1.0" },
+					headers: { Accept: "image/png,image/jpeg,image/gif,image/webp,image/avif", "User-Agent": "KwingsMail-Remote-Images/1.0" },
 					cache: "no-store",
 					redirect: "manual",
 					signal: controller.signal,

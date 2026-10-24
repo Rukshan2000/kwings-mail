@@ -64,7 +64,7 @@ function attachmentPart(attachment: AttachmentRow): EmailBodyPart {
 
 /**
  * The Email object (RFC 8621 §4.1) from a stored row. Bodies are the parsed
- * text and HTML Mailflare keeps; attachments become parts with blob ids the
+ * text and HTML Kwings Mail keeps; attachments become parts with blob ids the
  * download endpoint understands. Property filtering happens in the caller.
  */
 export function buildEmailObject(row: MessageRow, attachments: AttachmentRow[], options: { fetchBodies: boolean; maxBodyValueBytes: number }) {

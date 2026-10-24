@@ -1,7 +1,7 @@
 import type { MailboxRef, SystemRole } from "./types";
 
 /**
- * JMAP Mailbox ids encode Mailflare's model: a top-level Mailbox per Mailflare
+ * JMAP Mailbox ids encode Kwings Mail's model: a top-level Mailbox per Kwings Mail
  * mailbox (all its mail), system children keyed by status, and one child per
  * user folder. Ids are stable strings so clients can cache them.
  */

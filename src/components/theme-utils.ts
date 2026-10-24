@@ -1,13 +1,13 @@
 export type ThemePreference = "light" | "dark" | "system";
 
-export const THEME_STORAGE_KEY = "mailflare-theme";
-export const THEME_CHANGED_EVENT = "mailflare:theme-changed";
+export const THEME_STORAGE_KEY = "kwings-mail-theme";
+export const THEME_CHANGED_EVENT = "kwings-mail:theme-changed";
 
 // Runs in <head> before paint, so the first frame already has the right theme (same approach as the
 // sidebar width). Keep it in sync with resolveTheme/applyTheme below.
 export const themeBootstrapScript = `(() => {
 	try {
-		const saved = localStorage.getItem("mailflare-theme");
+		const saved = localStorage.getItem("kwings-mail-theme");
 		const preference = saved === "light" || saved === "dark" ? saved : "system";
 		const dark = preference === "dark" || (preference === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
 		document.documentElement.classList.toggle("dark", dark);

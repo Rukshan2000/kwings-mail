@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const outDir = mkdtempSync(join(tmpdir(), "mailflare-i18n-"));
+const outDir = mkdtempSync(join(tmpdir(), "kwings-mail-i18n-"));
 after(() => rmSync(outDir, { recursive: true, force: true }));
 const outfile = join(outDir, "i18n.mjs");
 
@@ -15,7 +15,7 @@ const outfile = join(outDir, "i18n.mjs");
 // `fetch` and the server's ASSETS binding. `testCatalogs` adds in-memory catalogs for an isolated locale.
 globalThis.testCatalogs = {};
 globalThis.readTestAsset = async (input) => {
-	const path = new URL(String(input), "https://mailflare.local").pathname;
+	const path = new URL(String(input), "https://kwings-mail.local").pathname;
 	const code = path.match(/^\/locales\/([\w-]+)\.json$/)?.[1];
 	if (code && globalThis.testCatalogs[code]) return Response.json(globalThis.testCatalogs[code]);
 	const file = join(root, "public", path);
@@ -66,11 +66,11 @@ async function bundleI18n(outfile, extraLocale = false) {
 				}));
 				builder.onResolve({ filter: /^(next\/headers|next\/font\/google|@\/components\/providers|@\/lib\/cloudflare|\.\/home-server-utils)$/ }, (args) => ({ path: args.path, namespace: "stub" }));
 				builder.onLoad({ filter: /.*/, namespace: "stub" }, ({ path }) => ({ contents: path === "next/headers"
-					? 'export async function cookies() { return { get(name) { return name === "mailflare-locale" && globalThis.testLocaleCookie !== undefined ? { value: globalThis.testLocaleCookie } : undefined; } }; }'
+					? 'export async function cookies() { return { get(name) { return name === "kwings-mail-locale" && globalThis.testLocaleCookie !== undefined ? { value: globalThis.testLocaleCookie } : undefined; } }; }'
 					: path === "next/font/google"
 						? 'export const Geist = () => ({ variable: "sans" }); export const Geist_Mono = () => ({ variable: "mono" });'
 						: path === "./home-server-utils"
-							? 'export async function getHomeBranding() { return { appName: "Mailflare", hasCustomIcon: false, canCustomizeBranding: false }; }'
+							? 'export async function getHomeBranding() { return { appName: "Kwings Mail", hasCustomIcon: false, canCustomizeBranding: false }; }'
 							: path === "@/lib/cloudflare"
 								? "export function getEnv() { return { ASSETS: { fetch: globalThis.readTestAsset } }; }"
 							: 'export function Providers({ children }) { return children; }' }));
@@ -125,9 +125,9 @@ test("translation uses the requested catalog and falls back per key", async () =
 });
 
 test("preference cookie persists for a year, covers every path and is Secure on HTTPS", () => {
-	assert.equal(i18n.serializeLocaleCookie("pt-BR", true), "mailflare-locale=pt-BR; Path=/; Max-Age=31536000; SameSite=Lax; Secure");
-	assert.equal(i18n.serializeLocaleCookie("en", false), "mailflare-locale=en; Path=/; Max-Age=31536000; SameSite=Lax");
-	assert.equal(i18n.serializeLocaleCookie("bad; Domain=example.com", true), "mailflare-locale=en; Path=/; Max-Age=31536000; SameSite=Lax; Secure");
+	assert.equal(i18n.serializeLocaleCookie("pt-BR", true), "kwings-mail-locale=pt-BR; Path=/; Max-Age=31536000; SameSite=Lax; Secure");
+	assert.equal(i18n.serializeLocaleCookie("en", false), "kwings-mail-locale=en; Path=/; Max-Age=31536000; SameSite=Lax");
+	assert.equal(i18n.serializeLocaleCookie("bad; Domain=example.com", true), "kwings-mail-locale=en; Path=/; Max-Age=31536000; SameSite=Lax; Secure");
 });
 
 test("provider server rendering uses initial locale and labels the native language selector", async () => {
@@ -158,7 +158,7 @@ test("a locale registered once reaches resolution, translation, cookie, selector
 	const extended = await import(pathToFileURL(extraFile).href);
 	assert.equal(extended.resolveLocale("xx"), "xx");
 	assert.equal(extended.translate(await extended.loadMessages("xx"), "navigation.inbox"), "Entrada");
-	assert.match(extended.serializeLocaleCookie("xx", true), /^mailflare-locale=xx;/);
+	assert.match(extended.serializeLocaleCookie("xx", true), /^kwings-mail-locale=xx;/);
 	const selector = await extended.renderLanguage("xx");
 	assert.match(selector, /value="xx" lang="xx" selected="">Testlandic<\/option>/);
 	assert.match(selector, />Entrada<\/span>/);

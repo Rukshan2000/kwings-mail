@@ -8,8 +8,8 @@ test("relay handles are told apart from APNs tokens", () => {
 });
 
 test("the relay URL is an https origin without a trailing slash", () => {
-	assert.equal(relayBaseUrl({ APNS_RELAY_URL: "https://ios-relay.mailflare.co" }), "https://ios-relay.mailflare.co");
-	assert.equal(relayBaseUrl({ APNS_RELAY_URL: " https://ios-relay.mailflare.co/ " }), "https://ios-relay.mailflare.co");
+	assert.equal(relayBaseUrl({ APNS_RELAY_URL: "https://ios-relay.kwings-mail.co" }), "https://ios-relay.kwings-mail.co");
+	assert.equal(relayBaseUrl({ APNS_RELAY_URL: " https://ios-relay.kwings-mail.co/ " }), "https://ios-relay.kwings-mail.co");
 	assert.equal(relayBaseUrl({ APNS_RELAY_URL: "http://localhost:3100" }), "http://localhost:3100");
 	assert.equal(relayBaseUrl({ APNS_RELAY_URL: "http://relay.example.com" }), null);
 	assert.equal(relayBaseUrl({ APNS_RELAY_URL: "not a url" }), null);

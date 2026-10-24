@@ -398,7 +398,7 @@ export function ComposeForm({
 
 		if (currentDraftId) {
 			void authFetch(`/api/drafts/${currentDraftId}`, { method: "DELETE" }).finally(() => {
-				window.dispatchEvent(new Event("mailflare:messages-changed"));
+				window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 			});
 		}
 		draftGeneration.current += 1;
@@ -424,11 +424,11 @@ export function ComposeForm({
 				action: { label: t("compose.cancelSend"), onClick: () => void cancelSend(sentMessageId) },
 			});
 			// Refresh the lists once the queue has had time to deliver it.
-			setTimeout(() => window.dispatchEvent(new Event("mailflare:messages-changed")), (data.undoSeconds + 3) * 1000);
+			setTimeout(() => window.dispatchEvent(new Event("kwings-mail:messages-changed")), (data.undoSeconds + 3) * 1000);
 		} else {
 			showNotice(data.scheduled ? t("compose.scheduled") : t("compose.sent"));
 		}
-		window.dispatchEvent(new Event("mailflare:messages-changed"));
+		window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 
 		if (onClose) {
 			dismiss();
@@ -445,7 +445,7 @@ export function ComposeForm({
 				return;
 			}
 			showNotice(t("compose.sendCancelled"));
-			window.dispatchEvent(new Event("mailflare:messages-changed"));
+			window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 			openDraftComposer(messageId);
 		} catch {
 			showNotice(t("compose.cancelTooLate"));
@@ -488,7 +488,7 @@ export function ComposeForm({
 		setQuotedHtml(null);
 		setAttachments([]);
 		setScheduledAt(null);
-		window.dispatchEvent(new Event("mailflare:messages-changed"));
+		window.dispatchEvent(new Event("kwings-mail:messages-changed"));
 
 		if (onClose) {
 			dismiss();

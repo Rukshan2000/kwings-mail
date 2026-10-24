@@ -9,7 +9,7 @@ export const MAX_PROVIDER_MESSAGE_BYTES = 25 * 1024 * 1024;
 
 /**
  * Hands a message a mail provider delivered (SES, Resend) to the normal intake,
- * once per recipient on a domain Mailflare manages. Routing rules, account
+ * once per recipient on a domain Kwings Mail manages. Routing rules, account
  * forwarding and storage then behave exactly as for Cloudflare mail. A provider
  * cannot refuse the message after it has been accepted, so a reject or a size
  * limit simply drops it. Throws on infrastructure failure so the provider retries.

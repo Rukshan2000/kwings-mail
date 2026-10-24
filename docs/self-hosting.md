@@ -1,6 +1,6 @@
-# Self-hosting Mailflare (Docker)
+# Self-hosting Kwings Mail (Docker)
 
-Mailflare can run as a single container on any host instead of Cloudflare
+Kwings Mail can run as a single container on any host instead of Cloudflare
 Workers. The same code serves both; the container provides its own database
 (SQLite on a volume), blob storage (files on the same volume), job queue,
 realtime WebSocket, backup schedule and an SMTP listener for inbound mail.
@@ -8,13 +8,13 @@ realtime WebSocket, backup schedule and an SMTP listener for inbound mail.
 ## Quick start
 
 ```bash
-git clone https://github.com/hieunc229/mailflare && cd mailflare
+git clone https://github.com/hieunc229/kwings-mail && cd kwings-mail
 cp .env.docker.example .env.docker      # edit: how to receive and send mail
 docker compose up -d --build
 ```
 
 Open `http://your-host:3000/setup`, create the admin account and add your
-domain. All data lives in the `mailflare-data` volume (`/data` in the
+domain. All data lives in the `kwings-mail-data` volume (`/data` in the
 container): the SQLite database, raw messages, attachments and backups.
 
 Behind a reverse proxy, set `APP_URL=https://mail.example.com` so links in
@@ -23,7 +23,7 @@ forward WebSocket upgrades for `/api/realtime`.
 
 ### PWA and push notifications
 
-Mailflare can be installed as a PWA and can deliver new-mail notifications
+Kwings Mail can be installed as a PWA and can deliver new-mail notifications
 after the browser is closed. Generate one VAPID key pair for the installation:
 
 ```bash
@@ -69,11 +69,11 @@ certificate on a private network.
 
 **Cloudflare Email Sending.** `CF_ACCOUNT_ID` plus a `CF_TOKEN` with Email
 Sending: Edit. The domain must be a Cloudflare zone with Email Sending set
-up; Mailflare calls the REST API, no Workers plan needed.
+up; Kwings Mail calls the REST API, no Workers plan needed.
 
 **Resend or Amazon SES, per domain.** Instead of one global relay, each domain
 can send through Resend or SES with their APIs (no SMTP involved), and receive
-through them too, once Mailflare can manage the domain's DNS with `CF_TOKEN`.
+through them too, once Kwings Mail can manage the domain's DNS with `CF_TOKEN`.
 Add the credentials on the domain page, or set `RESEND_API_KEY` /
 `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_REGION`. Receiving
 through either needs `APP_URL` set to your public HTTPS address. See
@@ -121,7 +121,7 @@ and the DNS page shows what to set by hand.
   for a full copy.
 - **Updates.** Pull the new image and recreate the container; migrations run
   at start. The in-app update button is disabled on self-hosted installs.
-- **Logs.** `docker compose logs -f mailflare`.
+- **Logs.** `docker compose logs -f kwings-mail`.
 - **Queues.** Jobs are held in memory. Inbound mail is written to the volume
   before it is queued, so a restart never loses a message; at worst one
   stays unparsed until it is re-imported.
@@ -130,14 +130,14 @@ and the DNS page shows what to set by hand.
 
 Set `AI_BASE_URL`, `AI_API_KEY`, and `AI_MODEL` in the container environment to configure the built-in assistant. These values stay on the server. Assistant chat is available by default when a provider is configured; a mailbox manager can change its writing instructions and availability through the settings button in the assistant panel. Automatic reply drafts remain off until enabled there. Auto-draft work is recorded in SQLite and retried after a restart by the local scheduler. AI failure does not reject inbound mail. Out-of-office auto-replies and AI auto-drafts are separate features; turn off out-of-office replies before enabling auto-drafts for a mailbox.
 
-The MCP endpoint is `/mcp`. Create a dedicated mailbox-scoped Bearer key in **Assistant → MCP** and give the key to a client that supports custom HTTP headers. The endpoint uses Streamable HTTP; `request_send` gives the client a review URL, and only an authenticated Mailflare browser session can confirm delivery. MCP read and draft tools remain available when no AI model is configured.
+The MCP endpoint is `/mcp`. Create a dedicated mailbox-scoped Bearer key in **Assistant → MCP** and give the key to a client that supports custom HTTP headers. The endpoint uses Streamable HTTP; `request_send` gives the client a review URL, and only an authenticated Kwings Mail browser session can confirm delivery. MCP read and draft tools remain available when no AI model is configured.
 
 ## Running without Docker
 
 ```bash
 npm ci
 npm run build:node
-MAILFLARE_RUNTIME=node NODE_ENV=production DATA_DIR=./data node dist/server.mjs
+KWINGS_MAIL_RUNTIME=node NODE_ENV=production DATA_DIR=./data node dist/server.mjs
 ```
 
 Port 25 needs root or a capability (`setcap cap_net_bind_service=+ep`); use

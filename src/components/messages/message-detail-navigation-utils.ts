@@ -1,7 +1,7 @@
 import type { MessageNavigationEntry } from "@/app/api/messages/navigation/types";
 import type { MessageDetailNavigationState } from "./message-detail-navigation-types";
 
-const openedUnreadKey = "mailflare-navigation-opened-unread";
+const openedUnreadKey = "kwings-mail-navigation-opened-unread";
 
 export function rememberOpenedUnreadMessage(messageId: string) {
 	try {

@@ -6,7 +6,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const directory = mkdtempSync(join(root, "node_modules", "mailflare-account-test-"));
+const directory = mkdtempSync(join(root, "node_modules", "kwings-mail-account-test-"));
 after(() => rmSync(directory, { recursive: true, force: true }));
 await build({
 	stdin: {
@@ -61,9 +61,9 @@ async function fixture(t, { rules = [], failAddress, slowAddress } = {}) {
 	`);
 	database.db.prepare("INSERT INTO api_keys (id, user_id, name, prefix, key_hash, scopes, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)")
 		.run("key", "admin", "Test", key.prefix, key.hash, '["accounts"]', 1);
-	const env = { DB: database, CF_TOKEN: "test-only", MAILFLARE_RUNTIME: "node" };
-	globalThis.__mailflareNodeEnv = env;
-	t.after(() => { delete globalThis.__mailflareNodeEnv; });
+	const env = { DB: database, CF_TOKEN: "test-only", KWINGS_MAIL_RUNTIME: "node" };
+	globalThis.__kwingsMailNodeEnv = env;
+	t.after(() => { delete globalThis.__kwingsMailNodeEnv; });
 	const session = await createSession(env, "admin");
 	const currentRules = structuredClone(rules);
 	const calls = [];
@@ -94,7 +94,7 @@ async function fixture(t, { rules = [], failAddress, slowAddress } = {}) {
 	});
 	const post = (kind, overrides = {}, token) => {
 		const handler = kind === "dashboard" ? dashboardCreate : apiCreate;
-		return handler(new Request(`https://mailflare.test/api/${kind === "dashboard" ? "" : "v1/"}accounts`, {
+		return handler(new Request(`https://kwings-mail.test/api/${kind === "dashboard" ? "" : "v1/"}accounts`, {
 			method: "POST",
 			headers: { Authorization: `Bearer ${token ?? (kind === "dashboard" ? session : key.fullKey)}`, "Content-Type": "application/json" },
 			body: JSON.stringify({ username: "sam", domainId: "one", password: "test-password", ...overrides }),
@@ -154,7 +154,7 @@ test("omitted settings preserve API compatibility; opting in includes future dom
 test("admin MCP forwards alias selection to the same account creation handler", async (t) => {
 	const f = await fixture(t);
 	const handlers = new Map();
-	registerAdminMcpTools({ registerTool: (name, _schema, handler) => handlers.set(name, handler) }, { scopes: ["accounts"] }, "https://mailflare.test", `Bearer ${key.fullKey}`);
+	registerAdminMcpTools({ registerTool: (name, _schema, handler) => handlers.set(name, handler) }, { scopes: ["accounts"] }, "https://kwings-mail.test", `Bearer ${key.fullKey}`);
 	const result = await handlers.get("manage_accounts")({ action: "create", data: { username: "sam", domainId: "one", password: "test-password", useAllDomains: false, aliases: [{ domainId: "two", localPart: "sales" }] } });
 	assert.equal(result.isError, false);
 	assert.equal(JSON.parse(result.content[0].text).status, 201);
@@ -215,7 +215,7 @@ test("database failures leave no partial account, aliases, or routing rules", as
 });
 
 function workerRule(id, address, enabled) {
-	return { id, zoneId: "zone-one", enabled, name: "Existing route", priority: 20, actions: [{ type: "worker", value: ["mailflare"] }], matchers: [{ type: "literal", field: "to", value: address }] };
+	return { id, zoneId: "zone-one", enabled, name: "Existing route", priority: 20, actions: [{ type: "worker", value: ["kwings-mail"] }], matchers: [{ type: "literal", field: "to", value: address }] };
 }
 
 for (const enabled of [true, false]) {

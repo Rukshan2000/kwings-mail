@@ -30,7 +30,7 @@ export function browserSupportsPush(): boolean {
 	);
 }
 
-export async function registerMailflareServiceWorker(): Promise<ServiceWorkerRegistration> {
+export async function registerKwingsMailServiceWorker(): Promise<ServiceWorkerRegistration> {
 	if (!("serviceWorker" in navigator)) throw new Error("Service workers are not supported by this browser");
 	const registration = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
 	return registration;
@@ -73,7 +73,7 @@ export async function getPushState(): Promise<{
 	}
 	const [config, registration] = await Promise.all([
 		loadPushConfig(),
-		registerMailflareServiceWorker(),
+		registerKwingsMailServiceWorker(),
 	]);
 	const subscription = await registration.pushManager.getSubscription();
 	if (subscription && config.enabled && Notification.permission === "granted") {
@@ -95,7 +95,7 @@ export async function enablePushNotifications(): Promise<void> {
 	const config = await loadPushConfig();
 	if (!config.enabled || !config.publicKey) throw new Error("Push notifications are not configured on this server");
 
-	const registration = await registerMailflareServiceWorker();
+	const registration = await registerKwingsMailServiceWorker();
 	let subscription = await registration.pushManager.getSubscription();
 	if (!subscription) {
 		subscription = await registration.pushManager.subscribe({

@@ -6,7 +6,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const directory = mkdtempSync(join(root, "node_modules", "mailflare-permanent-delete-test-"));
+const directory = mkdtempSync(join(root, "node_modules", "kwings-mail-permanent-delete-test-"));
 after(() => rmSync(directory, { recursive: true, force: true }));
 await build({
 	stdin: {
