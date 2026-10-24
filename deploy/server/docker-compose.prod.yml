@@ -12,6 +12,28 @@ services:
     env_file: .env
     volumes:
       - data:/data
+    depends_on:
+      - postfix
+
+  # Outbound only: no ports published, reachable as postfix:587 from the app.
+  postfix:
+    image: boky/postfix:v5.1.0
+    restart: unless-stopped
+    hostname: mail.kwingsmedia.com
+    environment:
+      ALLOWED_SENDER_DOMAINS: kwingsmedia.com
+      DKIM_AUTOGENERATE: "true"
+      DKIM_SELECTOR: mail
+      POSTFIX_myhostname: mail.kwingsmedia.com
+      POSTFIX_inet_protocols: ipv4      # reverse DNS is set for IPv4 only
+      POSTFIX_message_size_limit: "37748736"
+      POSTFIX_smtp_tls_security_level: may        # encrypt delivery whenever the receiver supports it
+      POSTFIX_smtp_tls_loglevel: "1"              # log whether each delivery used TLS
+    volumes:
+      - dkim:/etc/opendkim/keys         # keep the DKIM key across restarts
+      - spool:/var/spool/postfix        # keep queued mail across restarts
 
 volumes:
   data:
+  dkim:
+  spool:
