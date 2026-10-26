@@ -9,7 +9,7 @@ export async function authorizeCalendarRequest(env: CloudflareEnv, request: Requ
 	if (authorization.startsWith("Bearer ep_") || authorization.startsWith("Basic ")) {
 		const key = await authenticateApiRequest(env, request);
 		if (!key) return { user: null, key: null, error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
-		if (!hasScope(key.scopes, scope)) return { user: null, key: null, error: NextResponse.json({ error: "Permission denied" }, { status: 403 }) };
+		if (key.keyKind !== "device" && !hasScope(key.scopes, scope)) return { user: null, key: null, error: NextResponse.json({ error: "Permission denied" }, { status: 403 }) };
 		return { user: key.user, key, error: null };
 	}
 	const user = await getCurrentUser(env, request);
@@ -19,5 +19,5 @@ export async function authorizeCalendarRequest(env: CloudflareEnv, request: Requ
 }
 
 export function calendarKeyCanSendInvitations(key: ApiAuthResult | null, mailboxId: string | null | undefined): boolean {
-	return !key || !!mailboxId && hasScope(key.scopes, "send") && (key.mailboxIds === null || key.mailboxIds.includes(mailboxId));
+	return !key || key.keyKind === "device" || !!mailboxId && hasScope(key.scopes, "send") && (key.mailboxIds === null || key.mailboxIds.includes(mailboxId));
 }

@@ -29,6 +29,8 @@ interface CloudflareEnv {
 	APNS_PRIVATE_KEY?: string;
 	/** Origin of a Kwings Mail push relay (kwings-mail-relay); lets this server push without APNS_* keys. */
 	APNS_RELAY_URL?: string;
+	/** Firebase service-account JSON for Android push (FCM HTTP v1). */
+	FCM_SERVICE_ACCOUNT?: string;
 	AGENT_RATE_LIMIT?: RateLimit;
 	/**
 	 * Backblaze B2 storage. When all four are set, B2 replaces the R2 binding for raw mail, attachments, Drive,

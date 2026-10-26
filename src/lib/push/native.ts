@@ -5,6 +5,7 @@ import { newId } from "@/lib/ids";
 import type { NewMessageNotification } from "@/lib/realtime/types";
 import { encryptPreview, importApnsKey, signApnsJwt } from "./native-crypto";
 import { isRelayHandle, relayBaseUrl, sendViaRelay } from "./relay";
+import { fcmAccessToken, fcmConfig, sendFcm } from "./fcm";
 
 /**
  * Native push relay for the mobile apps (APNs). Configured with the
@@ -22,11 +23,12 @@ function apnsConfig(env: CloudflareEnv): ApnsConfig | null {
 
 /** Whether this server can deliver a push at all: with its own APNs key or through a relay. */
 export function isNativePushConfigured(env: CloudflareEnv): boolean {
-	return apnsConfig(env) !== null || relayBaseUrl(env) !== null;
+	return apnsConfig(env) !== null || relayBaseUrl(env) !== null || fcmConfig(env) !== null;
 }
 
 /** Whether a registration with this token can be delivered: a relay handle needs the relay, an APNs token needs a key. */
-export function canDeliverTo(env: CloudflareEnv, token: string): boolean {
+export function canDeliverTo(env: CloudflareEnv, platform: PushRegistration["platform"], token: string): boolean {
+	if (platform === "fcm") return fcmConfig(env) !== null;
 	return isRelayHandle(token) ? relayBaseUrl(env) !== null : apnsConfig(env) !== null;
 }
 
@@ -43,7 +45,7 @@ async function providerToken(config: ApnsConfig): Promise<string> {
 }
 
 export type PushRegistration = {
-	platform: "apns";
+	platform: "apns" | "fcm";
 	token: string;
 	environment: "production" | "sandbox";
 	topic: string;
@@ -106,9 +108,39 @@ export async function sendNativePush(env: CloudflareEnv, userIds: string[], mess
 			console.error("Native push: the APNs key could not be read. Check APNS_PRIVATE_KEY is the full .p8 contents.", error);
 		}
 	}
+	const fcm = fcmConfig(env);
+	let fcmToken: string | null = null;
+	if (fcm && devices.some((device) => device.platform === "fcm")) {
+		try {
+			fcmToken = await fcmAccessToken(fcm);
+		} catch (error) {
+			console.error("Native push: the FCM service account could not be used. Check FCM_SERVICE_ACCOUNT is the full JSON key.", error);
+		}
+	}
 	const stale: string[] = [];
 	const results = await Promise.allSettled(
 		devices.map(async (device) => {
+			if (device.platform === "fcm") {
+				if (!fcm) {
+					console.warn("Native push skipped: an Android device registered but FCM_SERVICE_ACCOUNT is not set");
+					return;
+				}
+				if (!fcmToken) return;
+				const preview = device.previews;
+				const result = await sendFcm(fcm, fcmToken, {
+					token: device.token,
+					title: preview ? (message.fromName ?? message.from).slice(0, 240) : "Kwings Mail",
+					body: preview ? (message.subject || "(no subject)").slice(0, 180) : "New message",
+					tag: message.messageId.slice(0, 64),
+					data: { accountId: device.clientRef ?? device.userId, mailboxId: message.mailboxId, messageId: message.messageId },
+				});
+				if (result.kind === "sent") console.info("FCM push sent");
+				else if (result.kind === "gone") {
+					console.warn("FCM dropped a device (unregistered)");
+					stale.push(device.id);
+				} else console.warn(`FCM push failed (${result.status} ${result.error})`);
+				return;
+			}
 			const payload = await buildApnsPayload(device, device.clientRef ?? device.userId, message);
 			const collapseId = message.messageId.slice(0, 64);
 			if (isRelayHandle(device.token)) {

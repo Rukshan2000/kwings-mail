@@ -8,9 +8,9 @@ import { isRelayHandle } from "@/lib/push/relay";
 import { isValidDevicePublicKey } from "@/lib/push/native-crypto";
 
 const registrationSchema = z.object({
-	platform: z.literal("apns"),
-	// An APNs token (hex) or a handle issued by a push relay.
-	token: z.string().regex(/^(?:[0-9a-fA-F]{32,200}|mfr1\.[A-Za-z0-9_-]{20,1000})$/),
+	platform: z.enum(["apns", "fcm"]),
+	// An APNs token (hex), a handle issued by a push relay, or an FCM registration token.
+	token: z.string().regex(/^(?:[0-9a-fA-F]{32,200}|mfr1\.[A-Za-z0-9_-]{20,1000}|[A-Za-z0-9_:-]{100,4096})$/),
 	environment: z.enum(["production", "sandbox"]).default("production"),
 	topic: z.string().min(3).max(200),
 	publicKey: z.string().max(200).nullable().default(null),
@@ -39,9 +39,11 @@ export async function PUT(request: Request) {
 		return NextResponse.json({ error: "publicKey must be a raw uncompressed P-256 point" }, { status: 400 });
 	}
 	const { accountRef, ...registration } = parsed.data;
-	await registerPushDevice(env, auth.userId, auth.keyId, { ...registration, token: isRelayHandle(registration.token) ? registration.token : registration.token.toLowerCase(), clientRef: accountRef ?? null });
+	// FCM tokens are case-sensitive; APNs hex tokens are normalised.
+	const token = registration.platform === "fcm" || isRelayHandle(registration.token) ? registration.token : registration.token.toLowerCase();
+	await registerPushDevice(env, auth.userId, auth.keyId, { ...registration, token, clientRef: accountRef ?? null });
 	// Registrations are kept without APNs secrets, but nothing is sent; the app shows that instead of "On".
-	return NextResponse.json({ ok: true, deliverable: canDeliverTo(env, registration.token) });
+	return NextResponse.json({ ok: true, deliverable: canDeliverTo(env, registration.platform, token) });
 }
 
 export async function DELETE(request: Request) {
